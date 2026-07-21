@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilim Dueli Pro — Mukammal Savollar Bazasi</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0c16">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bilim Dueli">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@500;700&family=Caveat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c16;
+    --bg2:#131629;
+    --panel:#161a2f;
+    --panel2:#1d2240;
+    --chalk:#f5f1e4;
+    --chalk-dim:#c8c4b6;
+    --p1:#ff7a3d;
+    --p1-dim:#4a2712;
+    --p2:#21e6c1;
+    --p2-dim:#0d3d34;
+    --warn:#ff4d5e;
+    --gold:#ffd166;
+    --line: rgba(245,241,228,0.12);
+    --line-strong: rgba(245,241,228,0.24);
+    --radius:16px;
+    --font-poster:'Bebas Neue',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 10%, rgba(33,230,193,0.08), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(255,122,61,0.08), transparent 40%),
+      radial-gradient(rgba(245,241,228,0.05) 1px, transparent 1px),
+      var(--bg);
+    background-size: 200% 200%, 200% 200%, 22px 22px, 100% 100%;
+    animation: driftGlow 18s ease-in-out infinite;
+    color:var(--chalk);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  @keyframes driftGlow{
+    0%,100%{ background-position: 15% 10%, 85% 90%, 0 0; }
+    50%{ background-position: 25% 20%, 75% 80%, 0 0; }
+  }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:32px 20px 64px;
+  }
+  .hero{
+    position:relative;
+    text-align:center;
+    margin-bottom:28px;
+    padding:38px 20px 30px;
+    animation: fadeUp .6s ease both;
+    overflow:hidden;
+    border-radius: var(--radius);
+    background: linear-gradient(115deg, var(--p1-dim) 0%, transparent 32%, transparent 68%, var(--p2-dim) 100%);
+    border:1px solid var(--line);
+  }
+  .hero::before{
+    content:'VS';
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-55%);
+    font-family: var(--font-poster);
+    font-size: clamp(90px,22vw,220px);
+    letter-spacing: 4px;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(245,241,228,0.06);
+    z-index:0;
+    pointer-events:none;
+  }
+  .hero .eyebrow{
+    position:relative; z-index:1;
+    font-family:'Caveat',cursive;
+    font-size:22px;
+    color:var(--p2);
+    letter-spacing:0.5px;
+    margin:0 0 2px;
+  }
+  .hero h1{
+    position:relative; z-index:1;
+    font-family: var(--font-poster);
+    font-weight:400;
+    font-size:clamp(42px,9vw,78px);
+    letter-spacing:2px;
+    margin:0;
+    line-height:0.95;
+    text-transform:uppercase;
+  }
+  .hero h1 span{
+    background: linear-gradient(90deg, var(--p1), var(--gold), var(--p2), var(--p1));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shineText 4s linear infinite;
+  }
+  @keyframes shineText{
+    to{ background-position: -200% center; }
+  }
+  .hero p.sub{
+    position:relative; z-index:1;
+    color:var(--chalk-dim);
+    font-size:15px;
+    margin:10px 0 0;
+  }
+  .dev-card {
+    position:relative;
+    background: linear-gradient(135deg, var(--panel), var(--bg2));
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 32px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    animation: fadeUp .6s ease .1s both;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 0 100%);
+  }
+  .dev-card::before{
+    content:'';
+    position:absolute; top:0; right:0;
+    width:26px; height:26px;
+    background: linear-gradient(135deg, var(--p1), var(--p2));
+  }
+  .dev-card:hover{
+    transform: translateY(-4px);
+    border-color: var(--p2);
+    box-shadow: 0 12px 32px rgba(33,230,193,0.18);
+  }
+.dev-img {
+    width: 180px;
+    height: 180px;
+    border-radius: var(--radius);
+    border: 3px solid var(--p1);
+    object-fit: cover; 
+    flex-shrink: 0;
+  }
+  
+  .dev-info h3 {
+    margin: 0 0 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    color: var(--p2);
+  }
+  .dev-info p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--chalk-dim);
+    line-height: 1.5;
+  }
+  .dev-tags {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .dev-tag {
+    background: var(--panel2);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    color: var(--p1);
+    border: 1px solid rgba(242,169,59,0.2);
+  }
+
+  .card{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px;
+    margin-bottom: 20px;
+    animation: fadeUp .6s ease .2s both;
+    transition: box-shadow .25s ease;
+    clip-path: polygon(26px 0, 100% 0, 100% 100%, 0 100%, 0 26px);
+  }
+  .card::before{
+    content:'';
+    position:absolute; top:0; left:0;
+    width:26px; height:26px;
+    background: linear-gradient(135deg, var(--p2), var(--p1));
+  }
+  .card:hover{
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+  }
+  .mode-select, .bot-difficulty {
+    margin-bottom: 24px;
+  }
+  .radio-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .radio-group .radio-btn { min-width: 120px; }
+  .radio-btn {
+    flex: 1;
+    background: var(--bg2);
+    border: 1.5px solid var(--line-strong);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight: 600;
+    letter-spacing:0.2px;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  
+  .radio-btn.active {
+    border-color: var(--p1);
+    background: var(--p1-dim);
+    box-shadow: 0 0 0 3px rgba(255,122,61,0.15);
+    transform: translateY(-1px);
+  }
+  .radio-btn.active.bot-opt {
+    border-color: var(--p2);
+    background: var(--p2-dim);
+    box-shadow: 0 0 0 3px rgba(33,230,193,0.15);
+  }
+  .radio-btn.active.solo-opt {
+    border-color: var(--gold);
+    background: rgba(255,209,102,0.14);
+    box-shadow: 0 0 0 3px rgba(255,209,102,0.15);
+  }
+  
+  .players-row{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    gap:16px;
+    align-items:center;
+    margin-bottom:24px;
+  }
+  .player-field label{
+    display:block;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:500;
+    font-size:13px;
+    margin-bottom:8px;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+}
+  .player-field.p1 label{ color:var(--p1); }
+  .player-field.p2 label{ color:var(--p2); }
+  .player-field input{
+    width:100%;
+    background:var(--bg2);
+    border:1.5px solid var(--line-strong);
+    border-radius:10px;
+    padding:12px 14px;
+    color:var(--chalk);
+    font-size:16px;
+    font-family:'Inter',sans-serif;
+    outline:none;
+    transition:border-color .15s;
+  }
+  .player-field.p1 input:focus{ border-color:var(--p1); }
+  .player-field.p2 input:focus{ border-color:var(--p2); }
+  .vs-badge{
+    font-family:'Caveat',cursive;
+    font-size:30px;
+    color:var(--chalk-dim);
+    padding-top:18px;
+  }
+  .section-label{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:500;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    color:var(--chalk-dim);
+    margin:0 0 12px;
+  }
+  .grade-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(64px,1fr));
+    gap:10px;
+    margin-bottom:26px;
+  }
+  .grade-chip{
+    background:var(--bg2);
+    border:1.5px solid var(--line-strong);
+    border-radius:10px;
+    padding:12px 4px;
+    text-align:center;
+    cursor:pointer;
+    font-family: var(--font-poster);
+    font-size:22px;
+    letter-spacing:1px;
+    color:var(--chalk);
+    transition:all .15s;
+    user-select:none;
+  }
+  .grade-chip:hover{ border-color:var(--p2); background:var(--panel2); transform:translateY(-2px); }
+  .grade-chip.active{
+    background:linear-gradient(135deg, var(--p1-dim), var(--p2-dim));
+    border-color:var(--p2);
+    color:#fff;
+    box-shadow:0 6px 18px rgba(33,230,193,0.2);
+    transform:translateY(-2px) scale(1.04);
+  }
+  .start-btn{
+    position:relative;
+    overflow:hidden;
+    width:100%;
+    background: linear-gradient(90deg, var(--p2), #17c9a8);
+    color:#04241e;
+    border:none;
+    border-radius:12px;
+    padding:18px;
+    font-family: var(--font-poster);
+    font-weight:400;
+    font-size:24px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    cursor:pointer;
+    clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+    transition:transform .1s, background .15s, box-shadow .2s;
+  }
+  .start-btn::after{
+    content:'';
+    position:absolute;
+    top:0; left:-75%;
+    width:50%; height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+    transform:skewX(-20deg);
+    animation:btnShine 2.8s ease-in-out infinite;
+  }
+  @keyframes btnShine{
+    0%{ left:-75%; }
+    50%{ left:125%; }
+    100%{ left:125%; }
+  }
+  .start-btn:hover{ background: linear-gradient(90deg, #4dfbe0, var(--p2)); box-shadow:0 10px 28px rgba(33,230,193,0.4); transform:translateY(-2px); }
+  .start-btn:active{ transform:scale(0.98); }
+  
+  #game{ display:none; }
+  .scoreboard{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:12px;
+    margin-bottom:20px;
+  }
+  .plate{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 14px;
+    border-radius:14px;
+    border:1.5px solid var(--line);
+    background:var(--panel);
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .plate.p2{ flex-direction:row-reverse; text-align:right; }
+  .plate .avatar{
+    width:38px;height:38px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:15px;
+  }
+  .plate.p1 .avatar{ background:var(--p1-dim); color:var(--p1); }
+  .plate.p2 .avatar{ background:var(--p2-dim); color:var(--p2); }
+  .plate .name{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:500;
+    font-size:14px;
+    line-height:1.2;
+    max-width:120px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .plate .score{ font-family: var(--font-poster); font-weight:400; font-size:28px; letter-spacing:1px; }
+  .plate.p1 .score{ color:var(--p1); }
+  .plate.p2 .score{ color:var(--p2); }
+  .plate.active.p1{ border-color:var(--p1); box-shadow:0 0 0 3px var(--p1-dim), 0 0 18px rgba(255,122,61,0.25); }
+  .plate.active.p2{ border-color:var(--p2); box-shadow:0 0 0 3px var(--p2-dim), 0 0 18px rgba(33,230,193,0.25); }
+  
+  .combo-badge {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 4px;
+    display: inline-block;
+  }
+  .plate.p1 .combo-badge { background: var(--p1-dim); color: var(--p1); }
+  .plate.p2 .combo-badge { background: var(--p2-dim); color: var(--p2); }
+
+  .vs-mid{ font-family: var(--font-poster); font-size:26px; letter-spacing:1px; text-align:center; color:var(--gold); }
+  .vs-mid .round{ display:block; font-family:'Inter',sans-serif; font-size:12px; margin-top:2px; color:var(--chalk-dim); letter-spacing:normal; }
+  
+  .track{ display:flex; gap:6px; margin-bottom:22px; }
+  .node{ flex:1; height:8px; border-radius:4px; background:var(--line-strong); }
+.node.p1{ background:var(--p1); }
+  .node.p2{ background:var(--p2); }
+  .node.miss{ background:#3a3f5a; }
+  
+  .turn-row{ display:flex; justify-content:between; align-items:center; margin-bottom:10px; }
+  .turn-label{ font-family:'Space Grotesk',sans-serif; font-size:14px; flex-grow: 1;}
+  .turn-label b{ font-weight:700; }
+  .turn-label.p1 b{ color:var(--p1); }
+  .turn-label.p2 b{ color:var(--p2); }
+  .subject-tag{ font-size:12px; color:var(--chalk-dim); border:1px solid var(--line-strong); padding:3px 10px; border-radius:20px; }
+  
+  .timer-track{ height:6px; background:var(--bg2); border-radius:3px; overflow:hidden; margin-bottom:22px; }
+  .timer-fill{ height:100%; background:var(--p2); width:100%; transition:width 1s linear, background .3s; box-shadow:0 0 10px currentColor; }
+  
+  .question-card{ background:var(--bg2); border:1.5px solid var(--line-strong); border-radius:14px; padding:24px; text-align:center; margin-bottom:18px; min-height:90px; display:flex; align-items:center; justify-content:center; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02); }
+  .question-card p{ font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:clamp(16px,3vw,20px); margin:0; line-height:1.4; }
+  
+  .options{ display:grid; grid-template-columns:1fr 1fr; gap:12px; counter-reset: opt-counter; }
+  .opt{ position:relative; background:var(--panel2); border:1.5px solid var(--line-strong); border-radius:12px; padding:16px 14px 16px 44px; color:var(--chalk); font-size:15px; font-family:'Inter',sans-serif; font-weight:500; cursor:pointer; text-align:left; transition:transform .12s, border-color .12s, background .12s; counter-increment: opt-counter; }
+  .opt::before{
+    content: counter(opt-counter, upper-alpha);
+    position:absolute; left:12px; top:50%; transform:translateY(-50%);
+    width:22px; height:22px; border-radius:6px;
+    background:var(--bg2); border:1px solid var(--line-strong);
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--font-poster); font-size:13px; color:var(--chalk-dim);
+  }
+  .opt:hover:not(:disabled){ border-color:var(--p2); transform:translateY(-2px); }
+  .opt.correct{ background:var(--p2-dim); border-color:var(--p2); color:var(--p2); }
+  .opt.correct::before{ border-color:var(--p2); color:var(--p2); }
+  .opt.wrong{ background:#3a1420; border-color:var(--warn); color:var(--warn); }
+  .opt.wrong::before{ border-color:var(--warn); color:var(--warn); }
+  .opt:disabled{ cursor:default; }
+  
+  #result{ display:none; text-align:center; }
+  #result h2{ font-family: var(--font-poster); font-weight:400; letter-spacing:1px; font-size:clamp(30px,7vw,46px); margin:0 0 24px; }
+  
+  .stats-table {
+    width: 100%;
+    margin: 20px 0 30px;
+    border-collapse: collapse;
+    background: var(--bg2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .stats-table th, .stats-table td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  .stats-table th {
+    background: var(--panel2);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--chalk-dim);
+  }
+
+  .btn-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn-row button{ font-family: var(--font-poster); font-size:16px; letter-spacing:1px; padding:12px 26px; border-radius:10px; cursor:pointer; border:1.5px solid var(--line-strong); background:transparent; color:var(--chalk); transition: all .15s; }
+  .btn-row button:hover{ border-color:var(--p2); transform:translateY(-2px); }
+  .btn-row button.primary{ background:var(--p2); border-color:var(--p2); color:#04241e; }
+  .btn-row button.share{ display:inline-flex; align-items:center; gap:8px; border-color:var(--p1); }
+  .btn-row button.share:hover{ border-color:var(--gold); }
+
+  .volume-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:24px;
+    background:var(--bg2);
+    border:1.5px solid var(--line-strong);
+    border-radius:12px;
+    padding:12px 16px;
+  }
+  .volume-row .vol-icon{ font-size:20px; flex-shrink:0; width:24px; text-align:center; }
+  .volume-row input[type="range"]{
+    flex:1;
+    -webkit-appearance:none;
+    appearance:none;
+    height:6px;
+    border-radius:3px;
+    background: var(--line-strong);
+    outline:none;
+    cursor:pointer;
+  }
+  .volume-row input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:18px; height:18px;
+    border-radius:50%;
+    background: var(--p2);
+    box-shadow:0 0 0 3px var(--p2-dim);
+    cursor:pointer;
+  }
+  .volume-row input[type="range"]::-moz-range-thumb{
+    width:18px; height:18px; border:none; border-radius:50%;
+    background: var(--p2);
+    box-shadow:0 0 0 3px var(--p2-dim);
+    cursor:pointer;
+  }
+  .volume-row .vol-val{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    color:var(--chalk-dim);
+    width:36px;
+    text-align:right;
+    flex-shrink:0;
+  }
+
+  .explain-box{
+    margin-top:14px;
+    padding:14px 16px;
+    background: rgba(255,77,94,0.08);
+    border:1.5px solid rgba(255,77,94,0.35);
+    border-radius:12px;
+    font-size:14px;
+    line-height:1.5;
+    color:var(--chalk);
+    animation: fadeUp .35s ease both;
+  }
+  .explain-box b{ color:var(--warn); }
+
+  .subject-grid .grade-chip{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.2px;
+    padding:10px 6px;
+  }
+
+  #mistakesSection{ text-align:left; margin-bottom:10px; }
+  .mistake-item{
+    background:var(--bg2);
+    border:1px solid var(--line-strong);
+    border-left:4px solid var(--warn);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:10px;
+    font-size:13px;
+    line-height:1.5;
+  }
+  .mistake-item .m-q{ font-weight:600; color:var(--chalk); margin-bottom:4px; }
+  .mistake-item .m-who{ font-size:11px; color:var(--chalk-dim); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px; }
+  .mistake-item .m-a{ color:var(--p2); margin-bottom:4px; }
+  .mistake-item .m-e{ color:var(--chalk-dim); }
+
+  #weakSection{ text-align:left; margin-bottom:10px; }
+  .weak-item{
+    background:var(--bg2);
+    border:1px solid var(--line-strong);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:8px;
+  }
+  .weak-item .w-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13px;
+    margin-bottom:6px;
+  }
+  .weak-item .w-name{ font-weight:600; color:var(--chalk); display:flex; align-items:center; gap:6px; }
+  .weak-item .w-pct{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; }
+  .weak-item .w-sub{ font-size:11px; color:var(--chalk-dim); margin-top:2px; }
+  .weak-bar{ height:7px; border-radius:4px; background:var(--panel2); overflow:hidden; }
+  .weak-bar-fill{ height:100%; border-radius:4px; transition:width .5s ease; }
+  .weak-item.worst{ border-left:4px solid var(--warn); }
+  .weak-item.best{ border-left:4px solid var(--p2); }
+  .weak-badge{
+    font-size:10px;
+    padding:2px 7px;
+    border-radius:20px;
+    background:var(--p1-dim);
+    color:var(--p1);
+    text-transform:uppercase;
+    letter-spacing:0.3px;
+  }
+
+  .install-hint{
+    text-align:center;
+    font-size:12px;
+    color:var(--chalk-dim);
+    margin:-4px 0 20px;
+  }
+  .install-hint button{
+    background:none; border:none; color:var(--p2); text-decoration:underline;
+    cursor:pointer; font-size:12px; font-family:'Inter',sans-serif; padding:0;
+  }
+
+  .leaderboard-btn{
+    display:block; margin:0 auto 20px; background:transparent; border:1.5px solid var(--gold); color:var(--gold);
+    font-family: var(--font-poster); font-size:15px; letter-spacing:1px; padding:10px 22px; border-radius:10px;
+    cursor:pointer; transition:all .15s;
+  }
+  .leaderboard-btn:hover{ background:rgba(255,209,102,0.1); transform:translateY(-2px); }
+
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(6,7,14,0.75); backdrop-filter:blur(3px);
+    z-index:50; align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{
+    position:relative;
+    background:var(--panel); border:1.5px solid var(--line-strong); border-radius:var(--radius);
+    padding:26px; max-width:480px; width:100%; max-height:80vh; overflow-y:auto;
+    animation: fadeUp .3s ease both;
+  }
+  .modal-box h2{ font-family: var(--font-poster); font-size:28px; letter-spacing:1px; margin:0 0 4px; color:var(--gold); }
+  .modal-box .modal-sub{ color:var(--chalk-dim); font-size:13px; margin:0 0 18px; }
+  .modal-close{ position:absolute; top:16px; right:18px; background:none; border:none; color:var(--chalk-dim); font-size:22px; cursor:pointer; line-height:1; }
+  .modal-close:hover{ color:var(--chalk); }
+
+  .lb-row{
+    display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; margin-bottom:8px;
+    background:var(--bg2); border:1px solid var(--line);
+  }
+  .lb-rank{ font-family: var(--font-poster); font-size:20px; color:var(--chalk-dim); width:26px; text-align:center; flex-shrink:0; }
+  .lb-row:nth-child(1) .lb-rank{ color:var(--gold); }
+  .lb-row:nth-child(2) .lb-rank{ color:#cfd4e6; }
+  .lb-row:nth-child(3) .lb-rank{ color:#d79a6a; }
+  .lb-info{ flex:1; min-width:0; }
+  .lb-name{ font-weight:600; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .lb-meta{ font-size:11px; color:var(--chalk-dim); margin-top:2px; }
+  .lb-score{ font-family: var(--font-poster); font-size:22px; color:var(--p2); flex-shrink:0; }
+  .lb-empty{ text-align:center; color:var(--chalk-dim); font-size:13px; padding:20px 0; }
+
+  .achv-badges{ display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 4px; justify-content:center; }
+  .achv-badge{
+    display:flex; align-items:center; gap:6px; background:var(--bg2); border:1px solid var(--line-strong);
+    border-radius:20px; padding:5px 12px; font-size:12px; color:var(--chalk-dim);
+  }
+  .achv-badge.unlocked{ border-color:var(--gold); color:var(--gold); background:rgba(255,209,102,0.08); }
+  .achv-badge .achv-icon{ font-size:14px; }
+
+  .new-achv-toast{
+    margin:14px 0 0; padding:10px 14px; border-radius:10px; background:rgba(255,209,102,0.1);
+    border:1.5px solid var(--gold); color:var(--gold); font-size:13px; text-align:center; line-height:1.6;
+    animation: fadeUp .4s ease both;
+  }
+  footer{ text-align:center; color:var(--chalk-dim); font-size:12px; margin-top:36px; }
+  @media(max-width:650px){ .dev-card{ flex-direction:column; text-align:center; } }
+  @media(max-width:520px){ .options{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Dasturchi haqida panel (Rasm o'zgartirildi) -->
+  <div class="dev-card">
+    <img src="o'zim.png" alt="Muslimbek" class="dev-img">
+    <div class="dev-info">
+      <h3>Dasturchi Haqida</h3>
+      <p>Salom! Men <b>Muslimbek</b>. Raqamli dunyoda qiziqarli va foydali loyihalar yaratishga intilyapman. Ushbu tizimda har bir sinf alohida ma'lumotlar bazasiga ajratildi va savollar mutlaqo tartibga solindi. Bu mening eng birinchi loyhalarimdan biri</p>
+      <div class="dev-tags">
+        <div class="dev-tag">Dasturchi</div>
+        <div class="dev-tag">Bilim Dueli</div>
+        <div class="dev-tag">Savollar Bazasi</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <p class="eyebrow">Sinflarga ajratilgan intellektual jang</p>
+    <h1>Bilim <span>Duели</span></h1>
+    <p class="sub">1-sinfdan 11-sinfgacha mustaqil savollar toplami bilan yangilangan duel!</p>
+  </div>
+
+  <button class="leaderboard-btn" id="leaderboardBtn">🏆 Reyting jadvali</button>
+
+  <div class="modal-overlay" id="leaderboardOverlay">
+    <div class="modal-box">
+      <button class="modal-close" id="closeLeaderboard">&times;</button>
+      <h2>🏆 Reyting</h2>
+      <p class="modal-sub">Ushbu qurilmada saqlangan eng yaxshi natijalar</p>
+      <div id="leaderboardList"></div>
+    </div>
+  </div>
+<div class="card" id="setup">
+    <p class="section-label">O'yin Rejimi</p>
+    <div class="mode-select">
+      <div class="radio-group">
+        <div class="radio-btn active" id="modePVP" onclick="setMode('pvp')">Do'st bilan o'ynash</div>
+        <div class="radio-btn bot-opt" id="modeBot" onclick="setMode('bot')">Robot bilan o'ynash</div>
+        <div class="radio-btn solo-opt" id="modeSolo" onclick="setMode('solo')">Yakka mashq</div>
+      </div>
+      <p class="hint" id="soloHint" style="display:none; text-align:center; margin-top:8px;">Har bir fandan 5 tadan savol chiqadi — raqibsiz, faqat bilimingizni sinang!</p>
+    </div>
+
+    <p class="section-label">Vaqt Chegarasi</p>
+<div class="mode-select" style="margin-bottom: 24px;">
+  <div class="radio-group">
+    <div class="radio-btn" id="timeSlow" onclick="setTimeLimit('slow')">Sekin</div>
+    <div class="radio-btn active" id="timeMedium" onclick="setTimeLimit('medium')">O'rtacha</div>
+    <div class="radio-btn" id="timeFast" onclick="setTimeLimit('fast')">Tez</div>
+  </div>
+</div>
+
+    <p class="section-label">Ovoz balandligi</p>
+    <div class="volume-row">
+      <span class="vol-icon" id="volIcon">🔊</span>
+      <input type="range" id="volumeSlider" min="0" max="100" value="70">
+      <span class="vol-val" id="volVal">70%</span>
+    </div>
+    <p class="install-hint" id="installHint" style="display:none;">📲 <button id="installBtn">Ilovani telefon ekraniga o'rnatish</button> — internetsiz ham o'ynang</p>
+
+    <div class="bot-difficulty" id="botDiffBox" style="display:none;">
+      <p class="section-label">Robot Qiyinchilik Darajasi</p>
+      <div class="radio-group">
+        <div class="radio-btn active bot-opt" id="diffEasy" onclick="setDiff('easy')">Oson</div>
+        <div class="radio-btn bot-opt" id="diffMedium" onclick="setDiff('medium')">O'rta</div>
+        <div class="radio-btn bot-opt" id="diffHard" onclick="setDiff('hard')">Qiyin</div>
+      </div>
+    </div>
+
+    <div class="players-row">
+      <div class="player-field p1">
+        <label>1-o'yinchi</label>
+        <input type="text" id="p1name" placeholder="Ismingizni yozing" maxlength="16" value="">
+      </div>
+      <div class="vs-badge">vs</div>
+      <div class="player-field p2">
+        <label id="p2Label">2-o'yinchi</label>
+        <input type="text" id="p2name" placeholder="Ismingizni yozing" maxlength="16" value="">
+      </div>
+    </div>
+
+    <p class="section-label">Sinfni tanlang</p>
+    <div class="grade-grid" id="gradeGrid"></div>
+
+    <div id="subjectSection" style="display:none;">
+      <p class="section-label">Fanni tanlang</p>
+      <div class="grade-grid subject-grid" id="subjectGrid"></div>
+    </div>
+
+    <button class="start-btn" id="startBtn">Duelni boshlash</button>
+    <p class="hint" id="hint" style="text-align:center; margin-top:10px;"></p>
+  </div>
+
+  <div class="card" id="game">
+    <div class="scoreboard">
+      <div class="plate p1" id="plate1">
+        <div class="avatar" id="av1">M</div>
+        <div>
+          <div class="name" id="nm1">Muslimbek</div>
+          <div class="score" id="sc1">0</div>
+          <div class="combo-badge" id="cb1" style="display:none;">Combo x0</div>
+        </div>
+      </div>
+      <div class="vs-mid"><span id="vsLabel">vs</span><span class="round" id="roundLbl">1 / 10</span></div>
+      <div class="plate p2" id="plate2">
+        <div class="avatar" id="av2">R</div>
+        <div>
+          <div class="name" id="nm2">Robot</div>
+          <div class="score" id="sc2">0</div>
+          <div class="combo-badge" id="cb2" style="display:none;">Combo x0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="track" id="track"></div>
+
+    <div class="turn-row">
+      <div class="turn-label" id="turnLabel">Navbat: <b id="turnName">—</b></div>
+      <div class="subject-tag" id="subjectTag">Matematika</div>
+    </div>
+    <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
+
+    <div class="question-card"><p id="qText">Savol yuklanmoqda...</p></div>
+    <div class="options" id="optionsBox"></div>
+    <div class="explain-box" id="explainBox" style="display:none;"></div>
+  </div>
+
+  <div class="card" id="result">
+    <h2 id="resultTitle">Natija</h2>
+    
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>O'yinchi</th>
+          <th>Ball</th>
+          <th>To'g'ri / Umumiy</th>
+          <th>Eng baland Combo</th>
+        </tr>
+      </thead>
+      <tbody id="statsBody"></tbody>
+    </table>
+
+    <div id="weakSection" style="display:none;">
+      <p class="section-label" style="text-align:left;">Fan bo'yicha zaif tomonlar tahlili</p>
+      <div id="weakList"></div>
+    </div>
+
+    <div id="mistakesSection" style="display:none;">
+      <p class="section-label" style="text-align:left;">Xato javoblar bo'yicha tushuntirishlar</p>
+      <div id="mistakesList"></div>
+    </div>
+
+    <div id="newAchvToast"></div>
+    <p class="section-label" style="margin-top:18px;">Yutuqlar — <span id="achvOwnerName"></span></p>
+    <div class="achv-badges" id="achvBadges"></div>
+
+    <div class="btn-row">
+      <button class="primary" id="replayBtn">Qayta o'ynash</button>
+      <button id="changeGradeBtn">Sinf/Rejimni o'zgartirish</button>
+      <button class="share" id="shareBtn">📤 Natijani ulashish</button>
+    </div>
+  </div>
+
+  <footer>Bilim Dueli — Dasturchi: Muslimbek</footer>
+</div>
+
+<script>
+let grade = null;
+let gameMode = 'pvp';
+let botDifficulty = 'easy'; 
+let p1 = { name:'', score:0, correct:0, total:0, combo:0, maxCombo:0 };
+let p2 = { name:'', score:0, correct:0, total:0, combo:0, maxCombo:0 };
+let round = 0;
+let TOTAL_ROUNDS = 10;
+let TIME_LIMIT = 20;
+let timer = null;
+let timeLeft = TIME_LIMIT;
+let currentAnswer = null;
+let currentPlayer = 1;
+let isExtraRoundMode = false;
+let currentPool = [];
+let poolForRefill = [];
+let selectedSubject = null;
+let currentExplanation = '';
+let currentQuestionText = '';
+let currentSubjectName = '';
+let mistakes = [];
+let subjectStats = {};
+let masterVolume = 0.7;
+
+// ---- Sozlamalarni saqlash (ism va ovoz balandligi) ----
+const SETTINGS_KEY = 'bilimDueliSettings';
+
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    if (typeof s.volume === 'number') {
+      masterVolume = Math.min(1, Math.max(0, s.volume));
+    }
+    if (s.p1name) document.getElementById('p1name').value = s.p1name;
+    if (s.p2name) document.getElementById('p2name').value = s.p2name;
+  } catch (e) { /* saqlangan ma'lumot yo'q yoki buzilgan, e'tiborsiz qoldiramiz */ }
+}
+
+function saveSettings(partial) {
+  let s = {};
+  try {
+    s = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {};
+  } catch (e) { s = {}; }
+  Object.assign(s, partial);
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch (e) { /* xotira to'lgan bo'lishi mumkin */ }
+}
+
+loadSettings();
+
+// Sahifa yuklanganda slayderni saqlangan qiymatga moslaymiz
+window.addEventListener('DOMContentLoaded', () => {
+  const slider = document.getElementById('volumeSlider');
+  const val = Math.round(masterVolume * 100);
+  slider.value = val;
+  document.getElementById('volVal').textContent = val + '%';
+  document.getElementById('volIcon').textContent = val === 0 ? '🔇' : (val < 50 ? '🔉' : '🔊');
+});
+
+// Har bir sinf uchun mustaqil savollar arxivi
+const database = {
+  1: [
+  { q: "8 sonidan keyin qaysi son keladi?", a: "9", o: ["9", "7", "10", "8"], s: "Matematika" , e: "Sonlar ketma-ketligida 8 dan keyin 9 keladi."},
+  { q: "'Kitob' so'zi qaysi harf bilan boshlanadi?", a: "K", o: ["K", "T", "B", "O"], s: "Ona Tili" , e: "'Kitob' so'zi 'K' harfi bilan boshlanadi."},
+  { q: "Qaysi hayvon tuxum qo'yadi?", a: "Tovuq", o: ["Tovuq", "Sigir", "Ot", "Qo'y"], s: "Atrofimizdagi olam" , e: "Tovuq - tuxum qo'yadigan qush turi."},
+  { q: "6 + 2 nechaga teng?", a: "8", o: ["8", "7", "9", "6"], s: "Matematika" , e: "6 + 2 = 8 bo'ladi."},
+  { q: "Qaysi meva daraxtda o'sadi?", a: "Olma", o: ["Olma", "Sabzi", "Kartoshka", "Piyoz"], s: "Atrofimizdagi olam" , e: "Olma daraxtda o'sadigan meva, sabzi va kartoshka esa yerda o'sadi."},
+  { q: "So'z oxiridagi harfni toping: 'Ona'", a: "A", o: ["A", "O", "N", "I"], s: "Ona Tili" , e: "'Ona' so'zi 'a' harfi bilan tugaydi."},
+  { q: "9 - 4 nechaga teng?", a: "5", o: ["5", "4", "6", "3"], s: "Matematika" , e: "9 - 4 = 5 bo'ladi."},
+  { q: "Qaysi faslda gullar ko'p ochiladi?", a: "Bahorda", o: ["Bahorda", "Qishda", "Kuzda", "Yozda"], s: "Atrofimizdagi olam" , e: "Bahorda havo isishi bilan ko'plab gullar ochiladi."},
+  { q: "Qaysi harf unli harf hisoblanadi?", a: "O", o: ["O", "T", "K", "S"], s: "Ona Tili" , e: "'O' - unli tovush, qolganlari undosh harflardir."},
+  { q: "Bir haftada nechta dam olish kuni bor?", a: "2 ta", o: ["2 ta", "1 ta", "3 ta", "4 ta"], s: "Tarbiyaviy dars" , e: "Haftada shanba va yakshanba - 2 ta dam olish kuni bor."},
+  { q: "5 + 5 nechaga teng?", a: "10", o: ["10", "9", "11", "8"], s: "Matematika" , e: "5 + 5 = 10 bo'ladi."},
+  { q: "Qaysi transport relsda yuradi?", a: "Poyezd", o: ["Poyezd", "Samolyot", "Kema", "Velosiped"], s: "Atrofimizdagi olam" , e: "Poyezd temir yo'l relsi orqali harakatlanadi."},
+  { q: "O'zbek alifbosida birinchi harf qaysi?", a: "A", o: ["A", "B", "D", "O"], s: "Ona Tili" , e: "O'zbek alifbosi 'A' harfidan boshlanadi."},
+  { q: "12 dan oldin qaysi son keladi?", a: "11", o: ["11", "10", "13", "9"], s: "Matematika" , e: "12 dan oldin 11 keladi."},
+  { q: "Qaysi qush ucha oladi?", a: "Kabutar", o: ["Kabutar", "Baliq", "Sigir", "Ot"], s: "Atrofimizdagi olam" , e: "Kabutar - qanotlari yordamida ucha oladigan qush."},
+  { q: "3 + 6 nechaga teng?", a: "9", o: ["9", "8", "10", "7"], s: "Matematika" , e: "3 + 6 = 9 bo'ladi."},
+  { q: "'Bola' so'zi nechta harfdan iborat?", a: "4 ta", o: ["4 ta", "3 ta", "5 ta", "2 ta"], s: "Ona Tili" , e: "'B-o-l-a' so'zi to'rtta harfdan iborat."},
+  { q: "Qaysi hayvon sut beradi?", a: "Sigir", o: ["Sigir", "Tovuq", "Mushuk", "Quyon"], s: "Atrofimizdagi olam" , e: "Sigir - sut beradigan hayvon."},
+  { q: "10 - 7 nechaga teng?", a: "3", o: ["3", "2", "4", "5"], s: "Matematika" , e: "10 - 7 = 3 bo'ladi."},
+  { q: "Yoz faslida ob-havo qanday bo'ladi?", a: "Issiq", o: ["Issiq", "Sovuq", "Qorli", "Muzli"], s: "Atrofimizdagi olam" , e: "Yoz faslida ob-havo issiq bo'ladi."},
+  { q: "Qaysi harf undosh harf?", a: "M", o: ["M", "A", "O", "E"], s: "Ona Tili" , e: "'M' - undosh tovush, talaffuzida havo to'siqqa uchraydi."},
+  { q: "4 + 5 nechaga teng?", a: "9", o: ["9", "8", "10", "7"], s: "Matematika" , e: "4 + 5 = 9 bo'ladi."},
+  { q: "Qaysi meva sariq rangda bo'ladi?", a: "Banan", o: ["Banan", "Olma", "Gilos", "Olcha"], s: "Atrofimizdagi olam" , e: "Banan pishganda sariq rangda bo'ladi."},
+  { q: "Daftar nima uchun ishlatiladi?", a: "Yozish uchun", o: ["Yozish uchun", "Uxlash uchun", "Ovqatlanish uchun", "Suzish uchun"], s: "Tarbiyaviy dars" , e: "Daftar - yozish uchun ishlatiladigan buyum."},
+  { q: "14 dan keyin qaysi son keladi?", a: "15", o: ["15", "13", "16", "12"], s: "Matematika" , e: "14 dan keyin 15 keladi."},
+  { q: "Qaysi hayvon sabzi yeyishni yaxshi ko'radi?", a: "Quyon", o: ["Quyon", "Mushuk", "Sher", "Baliq"], s: "Atrofimizdagi olam" , e: "Quyon sabzi yeyishni yaxshi ko'radi."},
+  { q: "'Maktab' so'zi qaysi harf bilan tugaydi?", a: "B", o: ["B", "M", "A", "T"], s: "Ona Tili" , e: "'Maktab' so'zi 'b' harfi bilan tugaydi."},
+  { q: "7 + 4 nechaga teng?", a: "11", o: ["11", "10", "12", "9"], s: "Matematika" , e: "7 + 4 = 11 bo'ladi."},
+  { q: "Qaysi sayyora Quyosh atrofida aylanadi va biz unda yashaymiz?", a: "Yer", o: ["Yer", "Oy", "Mars", "Quyosh"], s: "Atrofimizdagi olam" , e: "Yer - Quyosh atrofida aylanadigan va biz yashaydigan sayyora."},
+  { q: "Maktabda qo'ng'iroq nima uchun chalinadi?", a: "Dars boshlanishi va tugashi uchun", o: ["Dars boshlanishi va tugashi uchun", "Faqat o'yin uchun", "Faqat tushlik uchun", "Faqat uyga ketish uchun"], s: "Tarbiyaviy dars" , e: "Maktab qo'ng'irog'i darslar boshlanishi va tugashini bildirish uchun chalinadi."}
+],
+  2: [
+  { q: "25 + 15 nechaga teng?", a: "40", o: ["40", "35", "45", "30"], s: "Matematika" , e: "25 + 15 = 40 bo'ladi."},
+{ q: "48 - 19 nechaga teng?", a: "29", o: ["29", "30", "28", "31"], s: "Matematika" , e: "48 - 19 = 29 bo'ladi."},
+  { q: "6 × 4 nechaga teng?", a: "24", o: ["24", "20", "18", "28"], s: "Matematika" , e: "6 × 4 = 24 bo'ladi."},
+  { q: "36 ni 6 ga bo'lsak nechchi bo'ladi?", a: "6", o: ["6", "5", "7", "8"], s: "Matematika" , e: "36 ni 6 ga bo'lsak, 6 chiqadi (6×6=36)."},
+  { q: "Bir sutkada necha soat bor?", a: "24", o: ["24", "12", "48", "60"], s: "Matematika" , e: "Bir sutkada 24 soat bor (kecha-kunduz)."},
+  { q: "O'zbek alifbosida nechta harf bor?", a: "29 ta", o: ["29 ta", "26 ta", "28 ta", "30 ta"], s: "Ona Tili" , e: "O'zbek alifbosida 29 ta harf bor."},
+  { q: "'Maktab' so'zida nechta bo'g'in bor?", a: "2 ta", o: ["2 ta", "1 ta", "3 ta", "4 ta"], s: "Ona Tili" , e: "'Mak-tab' so'zi 2 ta bo'g'indan iborat."},
+  { q: "Gap oxiriga odatda qaysi belgi qo'yiladi?", a: "Nuqta", o: ["Nuqta", "Vergul", "Qo'shtirnoq", "Ikki nuqta"], s: "Ona Tili" , e: "Gap oxiriga odatda nuqta qo'yiladi."},
+  { q: "Ism qanday harf bilan yoziladi?", a: "Bosh harf", o: ["Bosh harf", "Kichik harf", "Raqam", "Belgi"], s: "Ona Tili" , e: "Kishilarning ismi har doim bosh harf bilan boshlanib yoziladi."},
+  { q: "'Ona' so'zining qarama-qarshi ma'noli so'zi qaysi?", a: "Yo'q", o: ["Yo'q", "Ota", "Ayol", "Qiz"], s: "Ona Tili" , e: "'Ona' qarindoshlik nomi bo'lib, uning odatiy qarama-qarshi ma'nolisi yo'q."},
+  { q: "O'zbekiston bayrog'ida nechta rang bor?", a: "4 ta", o: ["4 ta", "3 ta", "5 ta", "2 ta"], s: "Atrofimizdagi olam" , e: "O'zbekiston bayrog'ida ko'k, oq, yashil rang va qizil chiziqlar bo'lib, jami 4 ta rang bor."},
+  { q: "Suv necha darajada muzlaydi?", a: "0°C", o: ["0°C", "10°C", "50°C", "100°C"], s: "Atrofimizdagi olam" , e: "Suv 0°C haroratda muzga aylanadi."},
+  { q: "Qaysi fasldan keyin yoz keladi?", a: "Bahor", o: ["Bahor", "Qish", "Kuz", "Yoz"], s: "Atrofimizdagi olam" , e: "Bahordan keyin yoz fasli keladi."},
+  { q: "Inson tanasida nechta qo'l bor?", a: "2 ta", o: ["2 ta", "1 ta", "3 ta", "4 ta"], s: "Atrofimizdagi olam" , e: "Insonda 2 ta qo'l bor."},
+  { q: "Asalarilar nima tayyorlaydi?", a: "Asal", o: ["Asal", "Sut", "Yog'", "Non"], s: "Atrofimizdagi olam" , e: "Asalarilar gullardan nektar yig'ib, asal tayyorlaydi."},
+  { q: "Yerning tabiiy yo'ldoshi qaysi?", a: "Oy", o: ["Oy", "Quyosh", "Mars", "Yupiter"], s: "Atrofimizdagi olam" , e: "Oy - Yerning yagona tabiiy yo'ldoshi."},
+  { q: "Qaysi hayvon o'rmonlar shohi deb ataladi?", a: "Sher", o: ["Sher", "Yo'lbars", "Ayiq", "Bo'ri"], s: "Atrofimizdagi olam" , e: "Sher an'anaviy ravishda 'o'rmonlar shohi' deb ataladi."},
+  { q: "Qishda daraxtlarning barglari qanday bo'ladi?", a: "To'kiladi", o: ["To'kiladi", "Ko'payadi", "Qizaradi", "Ko'karadi"], s: "Atrofimizdagi olam" , e: "Qishda sovuq tufayli daraxt barglari to'kiladi."},
+  { q: "Kitobni ehtiyot qilish nimani bildiradi?", a: "Uni asrab-avaylash", o: ["Uni asrab-avaylash", "Yirtish", "Bo'yash", "Yo'qotish"], s: "Tarbiyaviy dars" , e: "Kitobni ehtiyot qilish - uni yirtmasdan, asrab-avaylab foydalanish demakdir."},
+  { q: "Yo'lni kesib o'tishda avval nimaga qaraladi?", a: "Mashinalarga", o: ["Mashinalarga", "Osmonga", "Daraxtga", "Uyga"], s: "Tarbiyaviy dars" , e: "Yo'lni kesib o'tishdan oldin avvalo mashinalarga qarash xavfsizlik uchun zarur."},
+  { q: "Kattalarga qanday munosabatda bo'lish kerak?", a: "Hurmat bilan", o: ["Hurmat bilan", "Qo'pol", "Befarq", "Jahldor"], s: "Tarbiyaviy dars" , e: "Kattalarga har doim hurmat bilan munosabatda bo'lish kerak."},
+  { q: "Qo'llarni qachon yuvish kerak?", a: "Ovqatdan oldin", o: ["Ovqatdan oldin", "Faqat kechasi", "Faqat maktabda", "Hech qachon"], s: "Tarbiyaviy dars" , e: "Qo'llar ovqatlanishdan oldin albatta yuvilishi kerak."},
+  { q: "Ingliz tilida 'Book' nimani anglatadi?", a: "Kitob", o: ["Kitob", "Qalam", "Daftar", "Ruchka"], s: "Ingliz Tili" , e: "Ingliz tilida 'Book' - kitob degani."},
+  { q: "Ingliz tilida 'Dog' nima degani?", a: "Kuchuk", o: ["Kuchuk", "Mushuk", "Qush", "Baliq"], s: "Ingliz Tili" , e: "Ingliz tilida 'Dog' - kuchuk (it) degani."},
+  { q: "Ingliz tilida 'Red' qaysi rang?", a: "Qizil", o: ["Qizil", "Ko'k", "Yashil", "Oq"], s: "Ingliz Tili" , e: "Ingliz tilida 'Red' - qizil rang degani."},
+  { q: "50 sonidan keyin qaysi son keladi?", a: "51", o: ["51", "49", "52", "60"], s: "Matematika" , e: "50 dan keyin 51 keladi."},
+  { q: "70 - 30 nechaga teng?", a: "40", o: ["40", "30", "50", "35"], s: "Matematika" , e: "70 - 30 = 40 bo'ladi."},
+  { q: "9 × 2 nechaga teng?", a: "18", o: ["18", "16", "20", "14"], s: "Matematika" , e: "9 × 2 = 18 bo'ladi."},
+  { q: "100 ichida eng katta ikki xonali son qaysi?", a: "99", o: ["99", "100", "98", "90"], s: "Matematika" , e: "100 ichidagi eng katta ikki xonali son - 99."},
+  { q: "Bir yilda nechta oy bor?", a: "12 ta", o: ["12 ta", "10 ta", "11 ta", "13 ta"], s: "Atrofimizdagi olam" , e: "Bir yilda 12 oy bor."}
+],
+  3: [
+  { q: "125 + 75 nechaga teng?", a: "200", o: ["200", "190", "210", "225"], s: "Matematika" , e: "125 + 75 = 200 bo'ladi."},
+  { q: "300 - 145 nechaga teng?", a: "155", o: ["155", "145", "165", "150"], s: "Matematika" , e: "300 - 145 = 155 bo'ladi."},
+  { q: "9 × 8 nechaga teng?", a: "72", o: ["72", "64", "81", "70"], s: "Matematika" , e: "9 × 8 = 72 bo'ladi."},
+  { q: "56 ÷ 7 nechaga teng?", a: "8", o: ["8", "7", "9", "6"], s: "Matematika" , e: "56 ni 7 ga bo'lsak, 8 chiqadi (7×8=56)."},
+{ q: "Bir kilometr necha metrga teng?", a: "1000", o: ["1000", "100", "500", "10"], s: "Matematika" , e: "1 kilometr = 1000 metrga teng."},
+  { q: "So'z turkumlaridan qaysi biri predmet nomini bildiradi?", a: "Ot", o: ["Ot", "Fe'l", "Sifat", "Son"], s: "Ona Tili" , e: "Ot so'z turkumi predmet nomini bildiradi."},
+  { q: "Fe'l nimani bildiradi?", a: "Harakatni", o: ["Harakatni", "Belgini", "Predmetni", "Sonni"], s: "Ona Tili" , e: "Fe'l - harakatni bildiruvchi so'z turkumi."},
+  { q: "'Go'zal' so'zi qaysi so'z turkumiga kiradi?", a: "Sifat", o: ["Sifat", "Ot", "Fe'l", "Son"], s: "Ona Tili" , e: "'Go'zal' so'zi belgini bildiradi, shuning uchun sifat turkumiga kiradi."},
+  { q: "Gapning bosh bo'laklari qaysilar?", a: "Ega va kesim", o: ["Ega va kesim", "Ot va sifat", "Fe'l va son", "Undalma va ega"], s: "Ona Tili" , e: "Gapning bosh bo'laklari - ega va kesim."},
+  { q: "'Kitoblar' so'zida nechta bo'g'in bor?", a: "3 ta", o: ["3 ta", "2 ta", "4 ta", "1 ta"], s: "Ona Tili" , e: "'Ki-tob-lar' so'zi 3 ta bo'g'indan iborat."},
+  { q: "O'zbekiston Respublikasining davlat tili qaysi?", a: "O'zbek tili", o: ["O'zbek tili", "Ingliz tili", "Rus tili", "Tojik tili"], s: "Atrofimizdagi olam" , e: "O'zbekiston Respublikasining davlat tili - o'zbek tili."},
+  { q: "O'zbekiston bayrog'idagi yarim oy nimani anglatadi?", a: "Mustaqillik va an'analarni", o: ["Mustaqillik va an'analarni", "Daryolarni", "Tog'larni", "Quyoshni"], s: "Atrofimizdagi olam" , e: "Bayroqdagi yarim oy mustaqillik va milliy an'analarni ramziy ifodalaydi."},
+  { q: "O'simliklar oziqasini asosan qaysi qismi orqali oladi?", a: "Ildizi", o: ["Ildizi", "Bargi", "Guli", "Mevasi"], s: "Atrofimizdagi olam" , e: "O'simliklar asosiy oziqasini ildizi orqali tuproqdan oladi."},
+  { q: "Suv tabiatda bug'langach nimaga aylanadi?", a: "Suv bug'iga", o: ["Suv bug'iga", "Qorga", "Muzga", "Shudringga"], s: "Atrofimizdagi olam" , e: "Suv bug'langanda suv bug'iga aylanadi."},
+  { q: "Qaysi sayyora 'Qizil sayyora' deb ataladi?", a: "Mars", o: ["Mars", "Yer", "Venera", "Yupiter"], s: "Atrofimizdagi olam" , e: "Mars sirtining qizg'ish rangi tufayli 'Qizil sayyora' deb ataladi."},
+  { q: "Inson tanasidagi eng katta a'zo qaysi?", a: "Teri", o: ["Teri", "Yurak", "O'pka", "Jigar"], s: "Atrofimizdagi olam" , e: "Teri - inson tanasidagi eng katta a'zo."},
+  { q: "Elektr jihozlariga nam qo'l bilan tegish mumkinmi?", a: "Yo'q", o: ["Yo'q", "Ha", "Faqat yozda", "Faqat uyda"], s: "Tarbiyaviy dars" , e: "Elektr toki nam orqali yaxshi o'tadi, shuning uchun nam qo'l bilan tegish xavfli va mumkin emas."},
+  { q: "Tabiatni asrash uchun nima qilish kerak?", a: "Daraxt ekish", o: ["Daraxt ekish", "Axlat tashlash", "Gullarni uzish", "Suvni isrof qilish"], s: "Tarbiyaviy dars" , e: "Daraxt ekish tabiatni asrashning eng samarali usullaridan biri."},
+  { q: "Yo'l harakati qoidalariga amal qilish nima uchun kerak?", a: "Xavfsizlik uchun", o: ["Xavfsizlik uchun", "Tez yugurish uchun", "O'yin uchun", "Dam olish uchun"], s: "Tarbiyaviy dars" , e: "Yo'l qoidalariga amal qilish avvalambor xavfsizlik uchun zarur."},
+  { q: "Do'stga qanday munosabatda bo'lish kerak?", a: "Mehribon va halol", o: ["Mehribon va halol", "Qo'pol", "Yolg'onchi", "Befarq"], s: "Tarbiyaviy dars" , e: "Do'stlik mehribonlik va halollikka asoslanishi kerak."},
+  { q: "Ingliz tilida 'Teacher' nimani anglatadi?", a: "O'qituvchi", o: ["O'qituvchi", "Shifokor", "O'quvchi", "Haydovchi"], s: "Ingliz Tili" , e: "Ingliz tilida 'Teacher' - o'qituvchi degani."},
+  { q: "Ingliz tilida 'School' nima degani?", a: "Maktab", o: ["Maktab", "Uy", "Bog'", "Kutubxona"], s: "Ingliz Tili" , e: "Ingliz tilida 'School' - maktab degani."},
+  { q: "Ingliz tilida 'Blue' qaysi rang?", a: "Ko'k", o: ["Ko'k", "Qizil", "Yashil", "Sariq"], s: "Ingliz Tili" , e: "Ingliz tilida 'Blue' - ko'k rang degani."},
+  { q: "Ingliz tilida 'Water' nimani bildiradi?", a: "Suv", o: ["Suv", "Olov", "Havo", "Tuproq"], s: "Ingliz Tili" , e: "Ingliz tilida 'Water' - suv degani."},
+  { q: "720 sonida nechta yuzlik bor?", a: "7 ta", o: ["7 ta", "2 ta", "72 ta", "0 ta"], s: "Matematika" , e: "720 sonida 7 ta yuzlik bor (7×100=700)."},
+  { q: "Qaysi son juft son hisoblanadi?", a: "48", o: ["48", "35", "27", "19"], s: "Matematika" , e: "48 soni qoldiqsiz 2 ga bo'linadi, shuning uchun juft son."},
+  { q: "900 dan keyin qaysi son keladi?", a: "901", o: ["901", "899", "910", "1000"], s: "Matematika" , e: "900 dan keyin 901 keladi."},
+  { q: "Bir soatda necha daqiqa bor?", a: "60", o: ["60", "30", "100", "24"], s: "Matematika" , e: "Bir soatda 60 daqiqa bor."},
+  { q: "O'zbekistonning poytaxti qaysi shahar?", a: "Toshkent", o: ["Toshkent", "Samarqand", "Buxoro", "Xiva"], s: "Atrofimizdagi olam" , e: "Toshkent - O'zbekistonning poytaxti."},
+  { q: "Yer Quyosh atrofini taxminan necha kunda bir marta aylanib chiqadi?", a: "365 kunda", o: ["365 kunda", "30 kunda", "180 kunda", "100 kunda"], s: "Atrofimizdagi olam" , e: "Yer Quyosh atrofini taxminan 365 kunda (bir yilda) aylanib chiqadi."}
+],
+  4:[
+  { q: "245 + 378 nechaga teng?", a: "623", o: ["623", "613", "633", "621"], s: "Matematika" , e: "245 + 378 = 623 bo'ladi."},
+  { q: "900 - 458 nechaga teng?", a: "442", o: ["442", "452", "432", "441"], s: "Matematika" , e: "900 - 458 = 442 bo'ladi."},
+  { q: "12 × 8 nechaga teng?", a: "96", o: ["96", "84", "98", "88"], s: "Matematika" , e: "12 × 8 = 96 bo'ladi."},
+{ q: "144 ÷ 12 nechaga teng?", a: "12", o: ["12", "14", "10", "16"], s: "Matematika" , e: "144 ni 12 ga bo'lsak, 12 chiqadi (12×12=144)."},
+  { q: "Bir tonna necha kilogramm?", a: "1000 kg", o: ["1000 kg", "100 kg", "500 kg", "10 kg"], s: "Matematika" , e: "1 tonna = 1000 kilogrammga teng."},
+  { q: "Gapning ikkinchi darajali bo'laklariga qaysilar kiradi?", a: "Aniqlovchi, to'ldiruvchi va hol", o: ["Aniqlovchi, to'ldiruvchi va hol", "Ega va kesim", "Ot va fe'l", "Sifat va son"], s: "Ona Tili" , e: "Gapning ikkinchi darajali bo'laklariga aniqlovchi, to'ldiruvchi va hol kiradi."},
+  { q: "'Yashil' so'zi qaysi so'z turkumiga kiradi?", a: "Sifat", o: ["Sifat", "Ot", "Fe'l", "Olmosh"], s: "Ona Tili" , e: "'Yashil' so'zi belgini bildiradi, shuning uchun sifat."},
+  { q: "Fe'l qanday so'roqlarga javob bo'ladi?", a: "Nima qildi?", o: ["Nima qildi?", "Kim?", "Qanday?", "Nechta?"], s: "Ona Tili" , e: "Fe'l 'nima qildi?' kabi harakat so'rog'iga javob bo'ladi."},
+  { q: "'Kitobxon' so'zi qanday usul bilan yasalgan?", a: "Qo'shimcha qo'shish", o: ["Qo'shimcha qo'shish", "Takrorlash", "Qisqartirish", "Ajratish"], s: "Ona Tili" , e: "'Kitobxon' so'zi 'kitob' o'zagiga '-xon' qo'shimchasini qo'shish orqali yasalgan."},
+  { q: "O'zbek alifbosida nechta harf bor?", a: "29 ta", o: ["29 ta", "26 ta", "28 ta", "30 ta"], s: "Ona Tili" , e: "O'zbek alifbosida 29 ta harf bor."},
+  { q: "O'zbekiston Respublikasining Konstitutsiyasi qachon qabul qilingan?", a: "1992-yil 8-dekabr", o: ["1992-yil 8-dekabr", "1991-yil 1-sentyabr", "1993-yil 9-may", "1995-yil 21-mart"], s: "Atrofimizdagi olam" , e: "O'zbekiston Respublikasi Konstitutsiyasi 1992-yil 8-dekabrda qabul qilingan."},
+  { q: "Amir Temur qaysi shaharda tavallud topgan?", a: "Shahrisabz", o: ["Shahrisabz", "Toshkent", "Buxoro", "Xiva"], s: "Atrofimizdagi olam" , e: "Amir Temur Shahrisabz shahrida tavallud topgan."},
+  { q: "Qaysi sayyora Quyosh tizimidagi eng katta sayyora?", a: "Yupiter", o: ["Yupiter", "Mars", "Yer", "Saturn"], s: "Atrofimizdagi olam" , e: "Yupiter - Quyosh tizimidagi eng katta sayyora."},
+  { q: "Inson tanasida qon aylanishini qaysi a'zo ta'minlaydi?", a: "Yurak", o: ["Yurak", "O'pka", "Jigar", "Buyrak"], s: "Atrofimizdagi olam" , e: "Yurak qon aylanish tizimini ta'minlaydigan asosiy a'zo."},
+  { q: "Fotosintez jarayoni asosan qayerda sodir bo'ladi?", a: "Bargda", o: ["Bargda", "Ildizda", "Poyada", "Gulda"], s: "Atrofimizdagi olam" , e: "Fotosintez jarayoni asosan bargda, xlorofill yordamida sodir bo'ladi."},
+  { q: "Yer Quyosh atrofini necha kunda aylanib chiqadi?", a: "365 kunda", o: ["365 kunda", "30 kunda", "180 kunda", "400 kunda"], s: "Atrofimizdagi olam" , e: "Yer Quyosh atrofini 365 kunda aylanib chiqadi."},
+  { q: "Qaysi gaz nafas olish uchun zarur?", a: "Kislorod", o: ["Kislorod", "Azot", "Karbonat angidrid", "Vodorod"], s: "Atrofimizdagi olam" , e: "Kislorod - inson va boshqa tirik organizmlar nafas olishi uchun zarur gaz."},
+  { q: "Yo'lni kesib o'tishda eng xavfsiz joy qaysi?", a: "Piyodalar o'tish joyi", o: ["Piyodalar o'tish joyi", "Istalgan joy", "Yo'l o'rtasi", "Burilish"], s: "Tarbiyaviy dars" , e: "Piyodalar o'tish joyi yo'lni kesib o'tishning eng xavfsiz nuqtasi."},
+  { q: "Tabiatni asrashning eng yaxshi usullaridan biri qaysi?", a: "Chiqindilarni saralash", o: ["Chiqindilarni saralash", "Daraxtlarni kesish", "Suvni isrof qilish", "Havoni ifloslantirish"], s: "Tarbiyaviy dars" , e: "Chiqindilarni saralash qayta ishlashni osonlashtirib, tabiatni asraydi."},
+  { q: "Internetdan foydalanganda shaxsiy ma'lumotlarni begonalarga berish mumkinmi?", a: "Yo'q", o: ["Yo'q", "Ha", "Ba'zan", "Har doim"], s: "Tarbiyaviy dars" , e: "Shaxsiy ma'lumotlarni begonalarga berish xavfsizlik nuqtai nazaridan xavfli."},
+  { q: "Ingliz tilida 'Hospital' nimani anglatadi?", a: "Kasalxona", o: ["Kasalxona", "Maktab", "Kutubxona", "Do'kon"], s: "Ingliz Tili" , e: "Ingliz tilida 'Hospital' - kasalxona degani."},
+  { q: "Ingliz tilida 'Family' nimani bildiradi?", a: "Oila", o: ["Oila", "Do'st", "Uy", "Maktab"], s: "Ingliz Tili" , e: "Ingliz tilida 'Family' - oila degani."},
+  { q: "Ingliz tilida 'Thursday' haftaning qaysi kuni?", a: "Payshanba", o: ["Payshanba", "Seshanba", "Juma", "Dushanba"], s: "Ingliz Tili" , e: "Ingliz tilida 'Thursday' - payshanba kuni degani."},
+  { q: "Ingliz tilida 'Mountain' nimani bildiradi?", a: "Tog'", o: ["Tog'", "Daryo", "Ko'l", "Cho'l"], s: "Ingliz Tili" , e: "Ingliz tilida 'Mountain' - tog' degani."},
+  { q: "3/4 kasrining maxraji qaysi son?", a: "4", o: ["4", "3", "7", "1"], s: "Matematika" , e: "3/4 kasrida pastki son (maxraj) 4 ga teng."},
+  { q: "Bir soatning yarmi necha daqiqa?", a: "30", o: ["30", "20", "40", "60"], s: "Matematika" , e: "Bir soatning yarmi 30 daqiqaga teng."},
+  { q: "2 kilometr necha metr bo'ladi?", a: "2000", o: ["2000", "200", "1000", "2500"], s: "Matematika" , e: "2 kilometr = 2000 metrga teng."},
+  { q: "Qaysi son tub son hisoblanadi?", a: "13", o: ["13", "12", "15", "21"], s: "Matematika" , e: "13 soni faqat 1 ga va o'ziga bo'linadi, shuning uchun tub son."},
+  { q: "O'zbekistonning davlat madhiyasi mualliflaridan biri kim?", a: "Abdulla Oripov", o: ["Abdulla Oripov", "Erkin Vohidov", "Hamid Olimjon", "Cho'lpon"], s: "Atrofimizdagi olam" , e: "O'zbekiston davlat madhiyasi so'zlari muallifi Abdulla Oripov."},
+  { q: "Qaysi daryo O'zbekiston hududidan oqib o'tadi?", a: "Amudaryo", o: ["Amudaryo", "Nil", "Amazonka", "Volga"], s: "Atrofimizdagi olam" , e: "Amudaryo - O'zbekiston hududidan oqib o'tuvchi yirik daryo."}
+],
+  5:[
+  { q: "345 + 678 nechaga teng?", a: "1023", o: ["1023", "1013", "1033", "1123"], s: "Matematika" , e: "345 + 678 = 1023 bo'ladi."},
+  { q: "1200 - 475 nechaga teng?", a: "725", o: ["725", "735", "715", "750"], s: "Matematika" , e: "1200 - 475 = 725 bo'ladi."},
+  { q: "15 × 12 nechaga teng?", a: "180", o: ["180", "170", "190", "160"], s: "Matematika" , e: "15 × 12 = 180 bo'ladi."},
+  { q: "144 ÷ 9 nechaga teng?", a: "16", o: ["16", "18", "14", "12"], s: "Matematika" , e: "144 ni 9 ga bo'lsak, 16 chiqadi (9×16=144)."},
+  { q: "2,5 + 1,8 nechaga teng?", a: "4,3", o: ["4,3", "4,2", "4,5", "3,8"], s: "Matematika" , e: "2,5 + 1,8 = 4,3 bo'ladi."},
+
+  { q: "Ot so'z turkumi nimani bildiradi?", a: "Shaxs, narsa va hodisa nomini", o: ["Shaxs, narsa va hodisa nomini", "Harakatni", "Belgini", "Sanoqni"], s: "Ona Tili" , e: "Ot so'z turkumi shaxs, narsa va hodisa nomini bildiradi."},
+  { q: "Fe'l qanday so'roqlarga javob bo'ladi?", a: "Nima qildi? Nima qiladi?", o: ["Nima qildi? Nima qiladi?", "Kim?", "Qanday?", "Nechanchi?"], s: "Ona Tili" , e: "Fe'l 'nima qildi? nima qiladi?' so'roqlariga javob bo'ladi."},
+  { q: "'Yaxshi' so'zining zid ma'noli so'zini toping.", a: "Yomon", o: ["Yomon", "Go'zal", "Katta", "Tez"], s: "Ona Tili" , e: "'Yaxshi' so'zining zid ma'nolisi - yomon."},
+  { q: "Qo'shma so'z qaysi javobda berilgan?", a: "Temiryo'l", o: ["Temiryo'l", "Kitob", "Yozuvchi", "O'qimoq"], s: "Ona Tili" , e: "'Temiryo'l' - ikki so'zning qo'shilishidan yasalgan qo'shma so'z."},
+  { q: "Gap oxirida his-hayajon ifodalansa qaysi tinish belgisi qo'yiladi?", a: "Undov belgisi", o: ["Undov belgisi", "Nuqta", "Vergul", "Ikki nuqta"], s: "Ona Tili" , e: "Gapda his-hayajon ifodalanganda undov belgisi qo'yiladi."},
+
+  { q: "O'zbekiston Respublikasining davlat ramzlari nechta?", a: "3 ta", o: ["3 ta", "2 ta", "4 ta", "5 ta"], s: "Tarix" , e: "O'zbekistonning davlat ramzlari - bayroq, gerb va madhiya, jami 3 ta."},
+  { q: "Amir Temur qaysi davlat asoschisi hisoblanadi?", a: "Temuriylar davlati", o: ["Temuriylar davlati", "Xiva xonligi", "Qo'qon xonligi", "Buxoro amirligi"], s: "Tarix" , e: "Amir Temur - Temuriylar davlatining asoschisi."},
+  { q: "Mustaqillik kuni qachon nishonlanadi?", a: "1-sentyabr", o: ["1-sentyabr", "8-dekabr", "9-may", "21-mart"], s: "Tarix" , e: "Mustaqillik kuni har yili 1-sentyabrda nishonlanadi."},
+  { q: "O'zbekiston Konstitutsiyasi qachon qabul qilingan?", a: "1992-yil 8-dekabr", o: ["1992-yil 8-dekabr", "1991-yil 1-sentyabr", "1993-yil 9-may", "1990-yil 21-mart"], s: "Tarix" , e: "O'zbekiston Konstitutsiyasi 1992-yil 8-dekabrda qabul qilingan."},
+  { q: "Samarqanddagi mashhur tarixiy maydon qanday nomlanadi?", a: "Registon", o: ["Registon", "Ichan qal'a", "Ark", "Minorai Kalon"], s: "Tarix" , e: "Registon - Samarqanddagi mashhur tarixiy maydon."},
+
+  { q: "Yerning yagona tabiiy yo'ldoshi qaysi?", a: "Oy", o: ["Oy", "Mars", "Quyosh", "Venera"], s: "Tabiiy fan" , e: "Oy - Yerning yagona tabiiy yo'ldoshi."},
+  { q: "Inson nafas olishi uchun qaysi gaz zarur?", a: "Kislorod", o: ["Kislorod", "Azot", "Karbonat angidrid", "Geliy"], s: "Tabiiy fan" , e: "Kislorod - nafas olish uchun zarur gaz."},
+  { q: "Suvning qaynash harorati necha daraja?", a: "100°C", o: ["100°C", "90°C", "80°C", "120°C"], s: "Tabiiy fan" , e: "Suv normal bosimda 100°C haroratda qaynaydi."},
+  { q: "Quyosh tizimidagi eng katta sayyora qaysi?", a: "Yupiter", o: ["Yupiter", "Mars", "Yer", "Saturn"], s: "Tabiiy fan" , e: "Yupiter - Quyosh tizimidagi eng katta sayyora."},
+  { q: "O'simliklar oziqasini qaysi jarayon orqali hosil qiladi?", a: "Fotosintez", o: ["Fotosintez", "Nafas olish", "Bug'lanish", "Eritish"], s: "Tabiiy fan" , e: "O'simliklar fotosintez jarayoni orqali o'ziga oziq hosil qiladi."},
+
+  { q: "Ingliz tilida 'Library' nimani anglatadi?", a: "Kutubxona", o: ["Kutubxona", "Maktab", "Kasalxona", "Do'kon"], s: "Ingliz Tili" , e: "Ingliz tilida 'Library' - kutubxona degani."},
+  { q: "Ingliz tilida 'Monday' qaysi kun?", a: "Dushanba", o: ["Dushanba", "Seshanba", "Juma", "Yakshanba"], s: "Ingliz Tili" , e: "Ingliz tilida 'Monday' - dushanba kuni degani."},
+  { q: "Ingliz tilida 'Beautiful' so'zi nimani bildiradi?", a: "Chiroyli", o: ["Chiroyli", "Tez", "Katta", "Yangi"], s: "Ingliz Tili" , e: "Ingliz tilida 'Beautiful' - chiroyli degani."},
+  { q: "Ingliz tilida 'Teacher' kim?", a: "O'qituvchi", o: ["O'qituvchi", "Shifokor", "Haydovchi", "Talaba"], s: "Ingliz Tili" , e: "Ingliz tilida 'Teacher' - o'qituvchi degani."},
+  { q: "Ingliz tilida 'Rain' nimani bildiradi?", a: "Yomg'ir", o: ["Yomg'ir", "Qor", "Shamol", "Bulut"], s: "Ingliz Tili" , e: "Ingliz tilida 'Rain' - yomg'ir degani."},
+
+  { q: "Kompyuterning asosiy hisoblash qurilmasi qaysi?", a: "Protsessor", o: ["Protsessor", "Monitor", "Sichqoncha", "Printer"], s: "Informatika" , e: "Protsessor - kompyuterning asosiy hisoblash qurilmasi."},
+  { q: "Klaviaturadagi Enter tugmasining vazifasi nima?", a: "Buyruqni tasdiqlash", o: ["Buyruqni tasdiqlash", "O'chirish", "Nusxa olish", "Saqlash"], s: "Informatika" , e: "Enter tugmasi kiritilgan buyruqni tasdiqlash uchun ishlatiladi."},
+  { q: "Fayllar saqlanadigan joy nima deb ataladi?", a: "Papka", o: ["Papka", "Kursor", "Monitor", "Brauzer"], s: "Informatika" , e: "Fayllar odatda papkalarda saqlanadi."},
+  { q: "Internet orqali ma'lumot qidirish uchun nima ishlatiladi?", a: "Brauzer", o: ["Brauzer", "Kalkulyator", "Paint", "Bloknot"], s: "Informatika" , e: "Brauzer - internetdan ma'lumot qidirish uchun ishlatiladigan dastur."},
+{ q: "Ctrl + C tugmalari nima vazifani bajaradi?", a: "Nusxa olish", o: ["Nusxa olish", "Joylash", "Kesish", "Saqlash"], s: "Informatika" , e: "Ctrl + C tugmalari nusxa olish (copy) amalini bajaradi."}
+],
+  6:[
+  { q: "3² + 4² nechaga teng?", a: "25", o: ["25", "24", "16", "49"], s: "Matematika" , e: "3² + 4² = 9 + 16 = 25 bo'ladi."},
+  { q: "360 ÷ 12 nechaga teng?", a: "30", o: ["30", "20", "40", "35"], s: "Matematika" , e: "360 ni 12 ga bo'lsak, 30 chiqadi."},
+  { q: "0,75 kasri oddiy kasr ko'rinishida qanday yoziladi?", a: "3/4", o: ["3/4", "2/3", "1/2", "4/5"], s: "Matematika" , e: "0,75 kasri oddiy kasrda 3/4 ga teng."},
+  { q: "7 × 13 nechaga teng?", a: "91", o: ["91", "81", "84", "98"], s: "Matematika" , e: "7 × 13 = 91 bo'ladi."},
+  { q: "Perimetri 24 sm bo'lgan kvadratning bir tomoni necha sm?", a: "6", o: ["6", "4", "8", "12"], s: "Matematika" , e: "Perimetri 24 sm bo'lgan kvadratning tomoni 24 ÷ 4 = 6 sm."},
+
+  { q: "Otning egalik qo'shimchasi qatnashgan javobni toping.", a: "Kitobim", o: ["Kitobim", "Kitob", "Kitoblar", "Kitobni"], s: "Ona Tili" , e: "'Kitobim' so'zida '-im' egalik qo'shimchasi ishlatilgan."},
+  { q: "'Chiroyli' so'zi qaysi so'z turkumiga kiradi?", a: "Sifat", o: ["Sifat", "Ot", "Fe'l", "Ravish"], s: "Ona Tili" , e: "'Chiroyli' so'zi belgini bildiradi, shuning uchun sifat."},
+  { q: "Sinonim so'zlar nima?", a: "Ma'nodosh so'zlar", o: ["Ma'nodosh so'zlar", "Qarama-qarshi ma'noli so'zlar", "Bir xil yozilib boshqa ma'nodagi so'zlar", "Qo'shma so'zlar"], s: "Ona Tili" , e: "Sinonim so'zlar - ma'nosi bir-biriga yaqin bo'lgan so'zlar."},
+  { q: "'Yurmoq' so'zining antonimini toping.", a: "To'xtamoq", o: ["To'xtamoq", "Yugurmoq", "Borish", "Qadam"], s: "Ona Tili" , e: "'Yurmoq' so'zining antonimi - to'xtamoq."},
+  { q: "Gapning asosiy bo'laklari qaysilar?", a: "Ega va kesim", o: ["Ega va kesim", "Hol va aniqlovchi", "To'ldiruvchi va hol", "Undalma va kirish so'z"], s: "Ona Tili" , e: "Gapning asosiy bo'laklari - ega va kesim."},
+
+  { q: "Amir Temur tavallud topgan yil qaysi?", a: "1336-yil", o: ["1336-yil", "1398-yil", "1405-yil", "1299-yil"], s: "Tarix" , e: "Amir Temur 1336-yilda tavallud topgan."},
+  { q: "Buyuk Ipak yo'li asosan nima uchun xizmat qilgan?", a: "Savdo-sotiq uchun", o: ["Savdo-sotiq uchun", "Faqat urush uchun", "Dehqonchilik uchun", "Sport uchun"], s: "Tarix" , e: "Buyuk Ipak yo'li asosan savdo-sotiqni rivojlantirish uchun xizmat qilgan."},
+  { q: "O'zbekistonning birinchi Prezidenti kim?", a: "Islom Karimov", o: ["Islom Karimov", "Shavkat Mirziyoyev", "Sharof Rashidov", "Abdulla Oripov"], s: "Tarix" , e: "Islom Karimov - O'zbekistonning birinchi Prezidenti."},
+  { q: "Xiva shahridagi mashhur tarixiy majmua qanday ataladi?", a: "Ichan qal'a", o: ["Ichan qal'a", "Registon", "Ark", "Minorai Kalon"], s: "Tarix" , e: "Ichan qal'a - Xiva shahridagi mashhur tarixiy majmua."},
+  { q: "Temuriylar davrida ilm-fan rivojlangan shahar qaysi?", a: "Samarqand", o: ["Samarqand", "Nukus", "Termiz", "Qo'qon"], s: "Tarix" , e: "Temuriylar davrida Samarqand ilm-fan markazi sifatida rivojlangan."},
+
+  { q: "Havodagi eng ko'p uchraydigan gaz qaysi?", a: "Azot", o: ["Azot", "Kislorod", "Vodorod", "Karbonat angidrid"], s: "Tabiiy fan" , e: "Azot - havoning tarkibida eng ko'p uchraydigan gaz."},
+  { q: "Odam tanasidagi eng katta ichki a'zo qaysi?", a: "Jigar", o: ["Jigar", "Yurak", "O'pka", "Buyrak"], s: "Tabiiy fan" , e: "Jigar - inson tanasidagi eng katta ichki a'zo."},
+  { q: "Elektr toki birligi nima?", a: "Amper", o: ["Amper", "Volt", "Vatt", "Om"], s: "Tabiiy fan" , e: "Amper - elektr toki kuchining o'lchov birligi."},
+  { q: "Quyosh energiyasidan elektr ishlab chiqaruvchi qurilma nima?", a: "Quyosh paneli", o: ["Quyosh paneli", "Generator", "Transformator", "Batareya"], s: "Tabiiy fan" , e: "Quyosh paneli quyosh nurini elektr energiyasiga aylantiradi."},
+  { q: "Yerning eng katta okeani qaysi?", a: "Tinch okeani", o: ["Tinch okeani", "Atlantika", "Hind", "Shimoliy Muz"], s: "Geografiya" , e: "Tinch okeani - Yerdagi eng katta okean."},
+
+  { q: "Ingliz tilida 'Yesterday' nimani anglatadi?", a: "Kecha", o: ["Kecha", "Bugun", "Ertaga", "Har doim"], s: "Ingliz Tili" , e: "Ingliz tilida 'Yesterday' - kecha degani."},
+  { q: "Ingliz tilida 'Spring' qaysi fasl?", a: "Bahor", o: ["Bahor", "Yoz", "Kuz", "Qish"], s: "Ingliz Tili" , e: "Ingliz tilida 'Spring' - bahor fasli degani."},
+  { q: "Ingliz tilida 'Computer' nima?", a: "Kompyuter", o: ["Kompyuter", "Telefon", "Televizor", "Soat"], s: "Ingliz Tili" , e: "Ingliz tilida 'Computer' - kompyuter degani."},
+  { q: "Ingliz tilida 'Bird' nimani bildiradi?", a: "Qush", o: ["Qush", "Baliq", "Mushuk", "Ot"], s: "Ingliz Tili" , e: "Ingliz tilida 'Bird' - qush degani."},
+  { q: "Ingliz tilida 'Happy' so'zining ma'nosi nima?", a: "Xursand", o: ["Xursand", "Xafa", "Och", "Chanqoq"], s: "Ingliz Tili" , e: "Ingliz tilida 'Happy' - xursand degani."},
+
+  { q: "Ctrl + Z tugmalari nima vazifani bajaradi?", a: "Oxirgi amalni bekor qiladi", o: ["Oxirgi amalni bekor qiladi", "Saqlaydi", "Nusxa oladi", "Kesadi"], s: "Informatika" , e: "Ctrl + Z tugmalari oxirgi bajarilgan amalni bekor qiladi."},
+  { q: "Kompyuterning vaqtinchalik xotirasi nima deyiladi?", a: "RAM", o: ["RAM", "SSD", "HDD", "ROM"], s: "Informatika" , e: "RAM - kompyuterning vaqtinchalik ma'lumot saqlaydigan xotirasi."},
+{ q: "Internetdagi sahifalar manzili nima deb ataladi?", a: "URL", o: ["URL", "USB", "CPU", "PDF"], s: "Informatika" , e: "URL - internetdagi sahifa manzilini bildiradi."},
+  { q: "Elektron pochta ingliz tilida qanday ataladi?", a: "E-mail", o: ["E-mail", "Website", "Browser", "Folder"], s: "Informatika" , e: "Elektron pochta ingliz tilida 'E-mail' deb ataladi."},
+  { q: "Microsoft Word asosan nima uchun ishlatiladi?", a: "Matn bilan ishlash", o: ["Matn bilan ishlash", "Video montaj", "O'yin o'ynash", "Musiqa yaratish"], s: "Informatika" , e: "Microsoft Word asosan matn bilan ishlash uchun ishlatiladi."}
+],
+  7:[
+  { q: "(-8) + 15 nechaga teng?", a: "7", o: ["7", "8", "-7", "23"], s: "Matematika" , e: "(-8) + 15 = 7 bo'ladi."},
+  { q: "3x = 27 bo'lsa, x ning qiymatini toping.", a: "9", o: ["9", "8", "6", "3"], s: "Matematika" , e: "3x = 27 bo'lsa, x = 27 ÷ 3 = 9."},
+  { q: "5² ning qiymati nechaga teng?", a: "25", o: ["25", "10", "20", "15"], s: "Matematika" , e: "5² = 5 × 5 = 25 bo'ladi."},
+  { q: "Uchburchak ichki burchaklari yig'indisi necha gradus?", a: "180°", o: ["180°", "360°", "90°", "270°"], s: "Matematika" , e: "Uchburchakning ichki burchaklari yig'indisi har doim 180° ga teng."},
+  { q: "0,25 oddiy kasr ko'rinishida qanday yoziladi?", a: "1/4", o: ["1/4", "2/5", "3/4", "1/2"], s: "Matematika" , e: "0,25 kasri oddiy kasrda 1/4 ga teng."},
+
+  { q: "Ravish qanday so'z turkumiga kiradi?", a: "Mustaqil so'z turkumi", o: ["Mustaqil so'z turkumi", "Yordamchi so'z turkumi", "Undov", "Taqlid so'z"], s: "Ona Tili" , e: "Ravish - mustaqil so'z turkumlaridan biri bo'lib, harakat belgisini bildiradi."},
+  { q: "'Bilimli' so'zining o'zagi qaysi?", a: "Bil", o: ["Bil", "Bilim", "Li", "Bilimli"], s: "Ona Tili" , e: "'Bilimli' so'zining o'zagi - 'bil' (bilmoq fe'lidan)."},
+  { q: "Antonim so'zlar deb nimaga aytiladi?", a: "Qarama-qarshi ma'noli so'zlarga", o: ["Qarama-qarshi ma'noli so'zlarga", "Ma'nodosh so'zlarga", "Bir xil yoziladigan so'zlarga", "Eskirgan so'zlarga"], s: "Ona Tili" , e: "Antonim so'zlar - qarama-qarshi ma'noli so'zlar."},
+  { q: "'O'qimoq' qaysi so'z turkumiga kiradi?", a: "Fe'l", o: ["Fe'l", "Ot", "Sifat", "Son"], s: "Ona Tili" , e: "'O'qimoq' harakatni bildirgani uchun fe'l turkumiga kiradi."},
+  { q: "Undalma qanday vazifani bajaradi?", a: "Murojaatni bildiradi", o: ["Murojaatni bildiradi", "Harakatni bildiradi", "Belgini bildiradi", "Sonni bildiradi"], s: "Ona Tili" , e: "Undalma gapda murojaat qilinayotgan shaxs yoki narsani bildiradi."},
+
+  { q: "Jaloliddin Manguberdi kim bo'lgan?", a: "Sarkarda", o: ["Sarkarda", "Shoir", "Olim", "Rassom"], s: "Tarix" , e: "Jaloliddin Manguberdi - mo'g'ullarga qarshi kurashgan mashhur sarkarda."},
+  { q: "Buyuk Ipak yo'li qit'alarni bog'lagan?", a: "Osiyo va Yevropani", o: ["Osiyo va Yevropani", "Afrika va Amerika", "Avstraliya va Afrika", "Shimoliy va Janubiy Amerikani"], s: "Tarix" , e: "Buyuk Ipak yo'li Osiyo va Yevropa qit'alarini savdo orqali bog'lagan."},
+  { q: "Amir Temur qaysi asrda yashagan?", a: "XIV asr", o: ["XIV asr", "XII asr", "XVI asr", "XVIII asr"], s: "Tarix" , e: "Amir Temur XIV asrda yashab o'tgan."},
+  { q: "Qadimgi Misrning mashhur daryosi qaysi?", a: "Nil", o: ["Nil", "Volga", "Amazonka", "Amudaryo"], s: "Tarix" , e: "Nil daryosi qadimgi Misr sivilizatsiyasi rivojlangan hudud."},
+  { q: "O'zbekiston mustaqillikka qachon erishgan?", a: "1991-yil", o: ["1991-yil", "1992-yil", "1989-yil", "1995-yil"], s: "Tarix" , e: "O'zbekiston 1991-yilda mustaqillikka erishgan."},
+
+  { q: "Suvning kimyoviy formulasi qaysi?", a: "H₂O", o: ["H₂O", "CO₂", "O₂", "NaCl"], s: "Kimyo" , e: "Suvning kimyoviy formulasi H₂O (2 vodorod, 1 kislorod atomi)."},
+  { q: "Odam organizmidagi eng katta bez qaysi?", a: "Jigar", o: ["Jigar", "Oshqozon", "Yurak", "Buyrak"], s: "Biologiya" , e: "Jigar - inson organizmidagi eng katta bez."},
+  { q: "Yer Quyosh atrofini taxminan necha kunda aylanadi?", a: "365 kun", o: ["365 kun", "30 kun", "180 kun", "400 kun"], s: "Geografiya" , e: "Yer Quyosh atrofini taxminan 365 kunda aylanib chiqadi."},
+  { q: "Atmosferada eng ko'p uchraydigan gaz qaysi?", a: "Azot", o: ["Azot", "Kislorod", "Vodorod", "Karbonat angidrid"], s: "Geografiya" , e: "Azot - atmosferada eng ko'p uchraydigan gaz."},
+  { q: "Elektr tokining kuchi qaysi birlikda o'lchanadi?", a: "Amper", o: ["Amper", "Volt", "Vatt", "Om"], s: "Fizika" , e: "Amper - elektr tokining kuchi o'lchanadigan birlik."},
+
+  { q: "Ingliz tilida 'Because' so'zining ma'nosi nima?", a: "Chunki", o: ["Chunki", "Ammo", "Va", "Yoki"], s: "Ingliz Tili" , e: "Ingliz tilida 'Because' - chunki degani."},
+  { q: "Past Simple zamoni asosan nimani bildiradi?", a: "O'tgan zamondagi ish-harakatni", o: ["O'tgan zamondagi ish-harakatni", "Hozirgi zamonni", "Kelasi zamonni", "Davom etayotgan ishni"], s: "Ingliz Tili" , e: "Past Simple zamoni o'tgan zamonda sodir bo'lgan harakatni bildiradi."},
+  { q: "Ingliz tilida 'Mountain' nimani anglatadi?", a: "Tog'", o: ["Tog'", "Daryo", "Ko'l", "Vodiy"], s: "Ingliz Tili" , e: "Ingliz tilida 'Mountain' - tog' degani."},
+  { q: "Ingliz tilida 'Fast' so'zining ma'nosi nima?", a: "Tez", o: ["Tez", "Sekin", "Baland", "Kichik"], s: "Ingliz Tili" , e: "Ingliz tilida 'Fast' - tez degani."},
+  { q: "Ingliz tilida 'Scientist' kim?", a: "Olim", o: ["Olim", "O'qituvchi", "Haydovchi", "Shifokor"], s: "Ingliz Tili" , e: "Ingliz tilida 'Scientist' - olim degani."},
+{ q: "CPU nimaning qisqartmasi?", a: "Central Processing Unit", o: ["Central Processing Unit", "Central Program Unit", "Computer Personal Unit", "Control Process Unit"], s: "Informatika" , e: "CPU - 'Central Processing Unit' (markaziy protsessor) so'zining qisqartmasi."},
+  { q: "Kompyuterda operatsion tizim vazifasi nima?", a: "Qurilmalarni boshqarish", o: ["Qurilmalarni boshqarish", "Faqat o'yin o'ynash", "Internetni yaratish", "Monitorni yoqish"], s: "Informatika" , e: "Operatsion tizim kompyuter qurilmalarini boshqarish vazifasini bajaradi."},
+  { q: "Python qanday dasturlash tili?", a: "Yuqori darajali", o: ["Yuqori darajali", "Mashina tili", "Assembler", "Faqat veb brauzer"], s: "Informatika" , e: "Python - o'qish va yozish inson tiliga yaqin bo'lgan yuqori darajali dasturlash tili."},
+  { q: "1 bayt necha bitdan iborat?", a: "8", o: ["8", "16", "32", "64"], s: "Informatika" , e: "1 bayt 8 bitdan iborat."},
+  { q: "HTML asosan nima yaratish uchun ishlatiladi?", a: "Veb-sahifalar", o: ["Veb-sahifalar", "Video montaj", "3D o'yin", "Operatsion tizim"], s: "Informatika" , e: "HTML tili asosan veb-sahifalar yaratish uchun ishlatiladi."}
+],
+  8:[
+  { q: "2x + 7 = 21 tenglamada x ning qiymatini toping.", a: "7", o: ["7", "6", "8", "14"], s: "Matematika" , e: "2x + 7 = 21 bo'lsa, 2x = 14, x = 7."},
+  { q: "(-12) × (-5) nechaga teng?", a: "60", o: ["60", "-60", "17", "50"], s: "Matematika" , e: "Manfiy son manfiy songa ko'paytirilsa, natija musbat bo'ladi: (-12)×(-5)=60."},
+  { q: "49 ning kvadrat ildizi nechaga teng?", a: "7", o: ["7", "14", "9", "6"], s: "Matematika" , e: "49 ning kvadrat ildizi 7 ga teng (7×7=49)."},
+  { q: "To'g'ri burchak  necha gradusga teng?", a: "90°", o: ["90°", "45°", "180°", "360°"], s: "Matematika" , e: "To'g'ri burchak 90° ga teng."},
+  { q: "π (pi) sonining taxminiy qiymati qaysi?", a: "3.14", o: ["3.14", "2.14", "4.13", "3.41"], s: "Matematika" , e: "π (pi) sonining taxminiy qiymati 3.14."},
+
+  { q: "Ergash gapli qo'shma gap nechta qismdan tashkil topadi?", a: "2 ta", o: ["2 ta", "1 ta", "3 ta", "4 ta"], s: "Ona Tili" , e: "Ergash gapli qo'shma gap bosh gap va ergash gap bo'lmish, ya'ni 2 qismdan iborat."},
+  { q: "'Mard' so'zining sinonimini toping.", a: "Jasur", o: ["Jasur", "Qo'rqoq", "Yolg'onchi", "Kasal"], s: "Ona Tili" , e: "'Mard' so'zining sinonimi - jasur."},
+  { q: "Olmosh qaysi so'z turkumiga kiradi?", a: "Mustaqil so'z turkumi", o: ["Mustaqil so'z turkumi", "Yordamchi so'z turkumi", "Undov", "Taqlid so'z"], s: "Ona Tili" , e: "Olmosh - mustaqil so'z turkumlaridan biri."},
+  { q: "Gapning asosiy mazmunini ifodalovchi bo'lak qaysi?", a: "Kesim", o: ["Kesim", "Hol", "Aniqlovchi", "To'ldiruvchi"], s: "Ona Tili" , e: "Kesim gapning asosiy mazmunini, ya'ni ega haqidagi asosiy fikrni ifodalaydi."},
+  { q: "'Mehribon' so'zidagi qo'shimchani toping.", a: "-bon", o: ["-bon", "-mehr", "-on", "-bo"], s: "Ona Tili" , e: "'Mehribon' so'zi 'mehr' o'zagiga '-bon' qo'shimchasi qo'shilib yasalgan."},
+
+  { q: "Temuriylar davrida mashhur astronom olim kim bo'lgan?", a: "Mirzo Ulug'bek", o: ["Mirzo Ulug'bek", "Al-Xorazmiy", "Beruniy", "Ibn Sino"], s: "Tarix" , e: "Mirzo Ulug'bek Temuriylar davrida yashagan mashhur astronom va olim."},
+  { q: "Fransiya poytaxti qaysi shahar?", a: "Parij", o: ["Parij", "London", "Madrid", "Rim"], s: "Geografiya" , e: "Parij - Fransiyaning poytaxti."},
+  { q: "Dunyodagi eng katta okean qaysi?", a: "Tinch okeani", o: ["Tinch okeani", "Atlantika", "Hind", "Shimoliy Muz"], s: "Geografiya" , e: "Tinch okeani - dunyodagi eng katta okean."},
+  { q: "O'zbekiston qaysi qit'ada joylashgan?", a: "Osiyo", o: ["Osiyo", "Yevropa", "Afrika", "Janubiy Amerika"], s: "Geografiya" , e: "O'zbekiston Osiyo qit'asida joylashgan."},
+  { q: "BMT qisqartmasining to'liq nomi nima?", a: "Birlashgan Millatlar Tashkiloti", o: ["Birlashgan Millatlar Tashkiloti", "Butunjahon Mehnat Tashkiloti", "Markaziy Tinchlik Tashkiloti", "Milliy Taraqqiyot Tashkiloti"], s: "Tarix" , e: "BMT - Birlashgan Millatlar Tashkiloti so'zining qisqartmasi."},
+
+  { q: "Suvning kimyoviy formulasi qaysi?", a: "H₂O", o: ["H₂O", "CO₂", "NaCl", "O₂"], s: "Kimyo" , e: "Suvning kimyoviy formulasi H₂O."},
+  { q: "Temirning kimyoviy belgisi qaysi?", a: "Fe", o: ["Fe", "Au", "Ag", "Cu"], s: "Kimyo" , e: "Temirning kimyoviy belgisi - Fe (lotincha 'ferrum' so'zidan)."},
+  { q: "Elektr kuchlanishi qaysi birlikda o'lchanadi?", a: "Volt", o: ["Volt", "Amper", "Vatt", "Om"], s: "Fizika" , e: "Volt - elektr kuchlanishining o'lchov birligi."},
+  { q: "Yorug'lik vakuumda taxminan qanday tezlikda tarqaladi?", a: "300 000 km/s", o: ["300 000 km/s", "30 000 km/s", "3 000 km/s", "150 000 km/s"], s: "Fizika" , e: "Yorug'lik vakuumda taxminan 300 000 km/s tezlikda tarqaladi."},
+  { q: "Fotosintez natijasida qaysi gaz ajraladi?", a: "Kislorod", o: ["Kislorod", "Azot", "Vodorod", "Geliy"], s: "Biologiya" , e: "Fotosintez natijasida o'simlik kislorod gazini ajratib chiqaradi."},
+
+  { q: "Present Perfect zamonida 'go' fe'lining uchinchi shakli qaysi?", a: "Gone", o: ["Gone", "Went", "Going", "Goes"], s: "Ingliz Tili" , e: "'Go' fe'lining uchinchi shakli (V3) - 'gone'."},
+  { q: "Ingliz tilida 'Environment' nimani anglatadi?", a: "Atrof-muhit", o: ["Atrof-muhit", "Universitet", "Tajriba", "Kelajak"], s: "Ingliz Tili" , e: "Ingliz tilida 'Environment' - atrof-muhit degani."},
+  { q: "Past Participle nima?", a: "Fe'lning uchinchi shakli", o: ["Fe'lning uchinchi shakli", "Fe'lning birinchi shakli", "Ot", "Sifat"], s: "Ingliz Tili" , e: "Past Participle - fe'lning uchinchi shakli (V3), Perfect zamonlarda ishlatiladi."},
+ { q: "Ingliz tilida 'Although' so'zining ma'nosi nima?", a: "Garchi", o: ["Garchi", "Chunki", "Ammo", "Shuning uchun"], s: "Ingliz Tili" , e: "Ingliz tilida 'Although' - garchi degani."},
+  { q: "Future Simple zamonida qaysi yordamchi fe'l ishlatiladi?", a: "Will", o: ["Will", "Did", "Has", "Was"], s: "Ingliz Tili" , e: "Future Simple zamoni 'will' yordamchi fe'li bilan yasaladi."},
+
+  { q: "Python dasturlash tilida ro'yxat (list) qaysi qavs bilan yoziladi?", a: "[]", o: ["[]", "()", "{}", "<>"], s: "Informatika" , e: "Python'da ro'yxat (list) kvadrat qavs [] ichida yoziladi."},
+  { q: "Kompyuter protsessorining asosiy vazifasi nima?", a: "Ma'lumotlarni qayta ishlash", o: ["Ma'lumotlarni qayta ishlash", "Rasm chizish", "Internet ulash", "Ovoz chiqarish"], s: "Informatika" , e: "Protsessor kompyuterda ma'lumotlarni qayta ishlash vazifasini bajaradi."},
+  { q: "1 KB taxminan necha baytga teng?", a: "1024", o: ["1024", "1000", "512", "2048"], s: "Informatika" , e: "1 KB (kilobayt) taxminan 1024 baytga teng."},
+  { q: "Operatsion tizimga misol qaysi?", a: "Windows", o: ["Windows", "Word", "Chrome", "PowerPoint"], s: "Informatika" , e: "Windows - operatsion tizimga misol."},
+  { q: "HTML hujjatida sarlavha yozish uchun qaysi teg ishlatiladi?", a: "<h1>", o: ["<h1>", "<p>", "<img>", "<br>"], s: "Informatika" , e: "HTML hujjatida sarlavha uchun <h1> tegi ishlatiladi."}
+],
+  9:[
+  { q: "2x - 5 = 17 tenglamada x ning qiymatini toping.", a: "11", o: ["11", "12", "10", "9"], s: "Matematika" , e: "2x - 5 = 17 bo'lsa, 2x = 22, x = 11."},
+  { q: "√144 ning qiymati nechaga teng?", a: "12", o: ["12", "14", "10", "16"], s: "Matematika" , e: "√144 = 12, chunki 12 × 12 = 144."},
+  { q: "3² × 2³ nechaga teng?", a: "72", o: ["72", "48", "64", "36"], s: "Matematika" , e: "3² × 2³ = 9 × 8 = 72."},
+  { q: "To'g'ri to'rtburchakning yuzi qanday topiladi?", a: "Uzunlik × kenglik", o: ["Uzunlik × kenglik", "2 × (a+b)", "Asos × balandlik ÷ 2", "Tomon²"], s: "Matematika" , e: "To'g'ri to'rtburchakning yuzi uzunlik va kenglikni ko'paytirish orqali topiladi."},
+  { q: "25% sonning qanday ulushiga teng?", a: "1/4", o: ["1/4", "1/2", "3/4", "1/5"], s: "Matematika" , e: "25% - 100 ulushning 25 tasi, ya'ni 1/4 qismga teng."},
+
+  { q: "Qo'shma gap necha yoki undan ortiq sodda gapdan tuziladi?", a: "2 ta", o: ["2 ta", "1 ta", "3 ta", "4 ta"], s: "Ona Tili" , e: "Qo'shma gap ikki yoki undan ortiq sodda gapdan tuziladi."},
+  { q: "'Vatan' so'zining sinonimini toping.", a: "Yurt", o: ["Yurt", "Shahar", "Qishloq", "Davlat"], s: "Ona Tili" , e: "'Vatan' so'zining sinonimi - yurt."},
+  { q: "Ravish asosan nimani bildiradi?", a: "Harakatning belgisini", o: ["Harakatning belgisini", "Predmetni", "Shaxsni", "Sonni"], s: "Ona Tili" , e: "Ravish harakatning belgisini (qanday, qachon, qayerda bajarilganini) bildiradi."},
+  { q: "Maqolning asosiy vazifasi nima?", a: "Hayotiy hikmatni ifodalash", o: ["Hayotiy hikmatni ifodalash", "Faqat kuldirish", "Faqat voqeani bayon qilish", "Hisob-kitob qilish"], s: "Adabiyot" , e: "Maqol xalq hayotiy tajribasi va hikmatini qisqa shaklda ifodalaydi."},
+  { q: "Alisher Navoiy qaysi asrda yashagan?", a: "XV asr", o: ["XV asr", "XIII asr", "XVII asr", "XIX asr"], s: "Adabiyot" , e: "Alisher Navoiy XV asrda yashab ijod qilgan."},
+
+  { q: "O'zbekiston Respublikasi qachon mustaqillikka erishgan?", a: "1991-yil", o: ["1991-yil", "1992-yil", "1990-yil", "1995-yil"], s: "Tarix" , e: "O'zbekiston Respublikasi 1991-yilda mustaqillikka erishgan."},
+  { q: "Ikkinchi jahon urushi qaysi yillarda bo'lib o'tgan?", a: "1939–1945", o: ["1939–1945", "1914–1918", "1941–1946", "1938–1944"], s: "Tarix" , e: "Ikkinchi jahon urushi 1939-1945-yillarda bo'lib o'tgan."},
+  { q: "BMTning bosh qarorgohi qayerda joylashgan?", a: "Nyu-York", o: ["Nyu-York", "London", "Parij", "Jeneva"], s: "Geografiya" , e: "BMTning bosh qarorgohi Nyu-York shahrida joylashgan."},
+  { q: "Dunyodagi eng uzun daryo qaysi?", a: "Nil", o: ["Nil", "Amazonka", "Volga", "Amudaryo"], s: "Geografiya" , e: "Nil - dunyodagi eng uzun daryo."},
+  { q: "Afrika qit'asidagi eng katta cho'l qaysi?", a: "Sahroi Kabir", o: ["Sahroi Kabir", "Qizilqum", "Gobi", "Qoraqum"], s: "Geografiya" , e: "Sahroi Kabir - Afrika qit'asidagi eng katta cho'l."},
+
+  { q: "CO₂ moddasining nomi nima?", a: "Karbonat angidrid", o: ["Karbonat angidrid", "Kislorod", "Vodorod", "Metan"], s: "Kimyo" , e: "CO₂ - karbonat angidrid gazining kimyoviy formulasi."},
+  { q: "Neytron qanday zaryadga ega?", a: "Zaryadsiz", o: ["Zaryadsiz", "Musbat", "Manfiy", "Ikkita musbat"], s: "Kimyo" , e: "Neytron - atom yadrosidagi zaryadsiz zarracha."},
+  { q: "Kuchning SI tizimidagi birligi qaysi?", a: "Nyuton", o: ["Nyuton", "Joul", "Vatt", "Paskal"], s: "Fizika" , e: "Nyuton - kuchning SI tizimidagi o'lchov birligi."},
+  { q: "Ohm qonuni qaysi kattaliklarni bog'laydi?", a: "Tok, kuchlanish va qarshilik", o: ["Tok, kuchlanish va qarshilik", "Massa va tezlik", "Bosim va hajm", "Harorat va vaqt"], s: "Fizika" , e: "Om qonuni tok kuchi, kuchlanish va qarshilik orasidagi bog'liqlikni ifodalaydi."},
+  { q: "Fotosintez qaysi organellada sodir bo'ladi?", a: "Xloroplast", o: ["Xloroplast", "Yadro", "Mitoxondriya", "Ribosoma"], s: "Biologiya" , e: "Fotosintez o'simlik hujayrasidagi xloroplast organellasida sodir bo'ladi."},
+
+  { q: "Present Perfect zamonining formulasi qaysi?", a: "Have/Has + V3", o: ["Have/Has + V3", "Did + V1", "Was/Were + V-ing", "Will + V2"], s: "Ingliz Tili" , e: "Present Perfect zamoni 'have/has + V3' formulasi bilan yasaladi."},
+{ q: "Passive Voice'da 'write' fe'lining V3 shakli qaysi?", a: "Written", o: ["Written", "Wrote", "Writing", "Writes"], s: "Ingliz Tili" , e: "'Write' fe'lining uchinchi shakli (V3) - 'written'."},
+  { q: "Ingliz tilida 'Knowledge' nimani anglatadi?", a: "Bilim", o: ["Bilim", "Kuch", "Tajriba", "Kitob"], s: "Ingliz Tili" , e: "Ingliz tilida 'Knowledge' - bilim degani."},
+  { q: "If I study, I ... the exam. Gapni to'ldiring.", a: "will pass", o: ["will pass", "passed", "passes", "had passed"], s: "Ingliz Tili" , e: "Hozirgi haqiqat asosida kelasi natija bildirilsa, 'will pass' shakli ishlatiladi (Zero/First Conditional)."},
+  { q: "Present Continuous zamonining formulasi qaysi?", a: "Am/Is/Are + V-ing", o: ["Am/Is/Are + V-ing", "Have + V3", "Did + V1", "Will + V1"], s: "Ingliz Tili" , e: "Present Continuous zamoni 'am/is/are + V-ing' formulasi bilan yasaladi."},
+
+  { q: "Python dasturlash tilida shart operatori qaysi kalit so'z bilan boshlanadi?", a: "if", o: ["if", "for", "while", "def"], s: "Informatika" , e: "Python'da shart operatori 'if' kalit so'zi bilan boshlanadi."},
+  { q: "Python'da takrorlash operatorlaridan biri qaysi?", a: "for", o: ["for", "print", "input", "int"], s: "Informatika" , e: "Python'da 'for' - takrorlash (sikl) operatorlaridan biri."},
+  { q: "CPU ning asosiy vazifasi nima?", a: "Hisoblash va boshqarish", o: ["Hisoblash va boshqarish", "Matn yozish", "Rasm chizish", "Internet ulash"], s: "Informatika" , e: "CPU kompyuterda hisoblash va boshqarish vazifalarini bajaradi."},
+  { q: "1 MB taxminan necha KB ga teng?", a: "1024", o: ["1024", "1000", "2048", "512"], s: "Informatika" , e: "1 MB (megabayt) taxminan 1024 KB ga teng."},
+  { q: "HTML'da havola yaratish uchun qaysi teg ishlatiladi?", a: "<a>", o: ["<a>", "<img>", "<div>", "<table>"], s: "Informatika" , e: "HTML'da havola yaratish uchun <a> tegi ishlatiladi."}
+],
+  10:[
+  { q: "2x + 5 = 17 tenglamaning yechimini toping.", a: "6", o: ["6", "5", "7", "8"], s: "Matematika" , e: "2x + 5 = 17 bo'lsa, 2x = 12, x = 6."},
+  { q: "sin(90°) ning qiymati nechaga teng?", a: "1", o: ["1", "0", "-1", "0.5"], s: "Matematika" , e: "sin(90°) trigonometrik jadvalga ko'ra 1 ga teng."},
+  { q: "3² + 4² ning yig'indisi nechaga teng?", a: "25", o: ["25", "49", "12", "16"], s: "Matematika" , e: "3² + 4² = 9 + 16 = 25."},
+  { q: "Kvadrat tenglamaning diskriminanti qaysi formula bilan topiladi?", a: "b² - 4ac", o: ["b² - 4ac", "a² + b²", "2ab", "a² - b²"], s: "Matematika" , e: "Kvadrat tenglamaning diskriminanti D = b² - 4ac formulasi bilan topiladi."},
+  { q: "log₁₀(1000) nechaga teng?", a: "3", o: ["3", "2", "10", "1000"], s: "Matematika" , e: "log₁₀(1000) = 3, chunki 10³ = 1000."},
+
+  { q: "Alisher Navoiyning 'Xamsa' asari nechta dostondan iborat?", a: "5 ta", o: ["5 ta", "4 ta", "6 ta", "7 ta"], s: "Adabiyot" , e: "Alisher Navoiyning 'Xamsa' asari 5 ta dostondan iborat."},
+  { q: "'O'tkan kunlar' romanining muallifi kim?", a: "Abdulla Qodiriy", o: ["Abdulla Qodiriy", "Cho'lpon", "Oybek", "Hamid Olimjon"], s: "Adabiyot" , e: "'O'tkan kunlar' romanini Abdulla Qodiriy yozgan."},
+  { q: "Gapning uyushiq bo'laklari qanday bog'lanadi?", a: "Teng bog'lanish orqali", o: ["Teng bog'lanish orqali", "Faqat ergashish orqali", "Faqat qo'shimcha bilan", "Bog'lanmaydi"], s: "Ona Tili" , e: "Uyushiq bo'laklar teng bog'lanish (bog'lovchilar yoki intonatsiya) orqali bog'lanadi."},
+  { q: "Publitsistik uslub asosan qayerda qo'llaniladi?", a: "OAVda", o: ["OAVda", "Ilmiy maqolalarda", "Shaxsiy xatlarda", "Darsliklarda"], s: "Ona Tili" , e: "Publitsistik uslub asosan ommaviy axborot vositalarida (OAVda) qo'llaniladi."},
+  { q: "Antonim so'zlar nima?", a: "Qarama-qarshi ma'noli so'zlar", o: ["Qarama-qarshi ma'noli so'zlar", "Ma'nodosh so'zlar", "Bir xil yoziladigan so'zlar", "Eskirgan so'zlar"], s: "Ona Tili" , e: "Antonim so'zlar - qarama-qarshi ma'noli so'zlar."},
+
+  { q: "Birinchi jahon urushi qaysi yillarda bo'lib o'tgan?", a: "1914–1918", o: ["1914–1918", "1939–1945", "1905–1907", "1918–1922"], s: "Tarix" , e: "Birinchi jahon urushi 1914-1918-yillarda bo'lib o'tgan."},
+  { q: "BMT qachon tashkil topgan?", a: "1945-yil", o: ["1945-yil", "1941-yil", "1950-yil", "1939-yil"], s: "Tarix" , e: "BMT 1945-yilda tashkil topgan."},
+  { q: "O'zbekiston BMTga qachon a'zo bo'lgan?", a: "1992-yil", o: ["1992-yil", "1991-yil", "1993-yil", "1995-yil"], s: "Tarix" , e: "O'zbekiston BMTga 1992-yilda a'zo bo'lgan."},
+  { q: "Yer yuzidagi eng katta materik qaysi?", a: "Yevrosiyo", o: ["Yevrosiyo", "Afrika", "Shimoliy Amerika", "Antarktida"], s: "Geografiya" , e: "Yevrosiyo - Yer yuzidagi eng katta materik."},
+  { q: "Ekvatorning uzunligi taxminan necha kilometr?", a: "40 075 km", o: ["40 075 km", "20 000 km", "30 500 km", "50 000 km"], s: "Geografiya" , e: "Ekvatorning uzunligi taxminan 40 075 km ga teng."},
+
+  { q: "Avogadro sonining taxminiy qiymati qaysi?", a: "6.02 × 10²³", o: ["6.02 × 10²³", "3 × 10⁸", "9.8", "1.6 × 10⁻¹⁹"], s: "Kimyo" , e: "Avogadro soni taxminan 6.02 × 10²³ ga teng."},
+  { q: "Suvning molyar massasi nechaga teng?", a: "18 g/mol", o: ["18 g/mol", "16 g/mol", "20 g/mol", "22 g/mol"], s: "Kimyo" , e: "Suvning molyar massasi 18 g/mol ga teng (H₂O: 2×1 + 16 = 18)."},
+  { q: "Nyutonning ikkinchi qonuni qaysi formula bilan ifodalanadi?", a: "F = ma", o: ["F = ma", "E = mc²", "P = UI", "v = s/t"], s: "Fizika" , e: "Nyutonning ikkinchi qonuni F = ma formulasi bilan ifodalanadi."},
+  { q: "Yorug'lik tezligi vakuumda taxminan qancha?", a: "3 × 10⁸ m/s", o: ["3 × 10⁸ m/s", "3 × 10⁶ m/s", "3 × 10⁵ m/s", "3 × 10⁹ m/s"], s: "Fizika" , e: "Yorug'lik tezligi vakuumda taxminan 3 × 10⁸ m/s ga teng."},
+  { q: "DNKning to'liq nomi nima?", a: "Dezoksiribonuklein kislota", o: ["Dezoksiribonuklein kislota", "Ribonuklein kislota", "Aminokislota", "Nukleotid"], s: "Biologiya" , e: "DNK - dezoksiribonuklein kislotaning to'liq nomi."},
+
+  { q: "Present Perfect Continuous zamonining formulasi qaysi?", a: "Have/Has been + V-ing", o: ["Have/Has been + V-ing", "Had + V3", "Will + V1", "Am/Is/Are + V-ing"], s: "Ingliz Tili" , e: "Present Perfect Continuous zamoni 'have/has been + V-ing' formulasi bilan yasaladi."},
+  { q: "Passive Voice'da 'build' fe'lining V3 shakli qaysi?", a: "Built", o: ["Built", "Builded", "Building", "Build"], s: "Ingliz Tili" , e: "'Build' fe'lining uchinchi shakli (V3) - 'built'."},
+  { q: "'If I had studied, I ... the exam.' gapini to'ldiring.", a: "would have passed", o: ["would have passed", "will pass", "passed", "have passed"], s: "Ingliz Tili" , e: "O'tgan shartga qarshi natija uchinchi turdagi shartli gap (Third Conditional) bilan 'would have passed' shaklida ifodalanadi."},
+  { q: "Reported Speech'da 'today' so'zi ko'pincha nimaga o'zgaradi?", a: "That day", o: ["That day", "Tomorrow", "Yesterday", "This day"], s: "Ingliz Tili" , e: "Reported Speech'da 'today' so'zi odatda 'that day'ga o'zgaradi."},
+  { q: "Present Perfect zamonining formulasi qaysi?", a: "Have/Has + V3", o: ["Have/Has + V3", "Did + V1", "Will + V1", "Am/Is/Are + V-ing"], s: "Ingliz Tili" , e: "Present Perfect zamoni 'have/has + V3' formulasi bilan yasaladi."},
+
+  { q: "Python dasturlash tilida funksiya yaratish uchun qaysi kalit so'z ishlatiladi?", a: "def", o: ["def", "function", "func", "define"], s: "Informatika" , e: "Python'da funksiya yaratish uchun 'def' kalit so'zi ishlatiladi."},
+  { q: "Python'da lug'at (dictionary) qaysi qavslar bilan yoziladi?", a: "{}", o: ["{}", "[]", "()", "<>"], s: "Informatika" , e: "Python'da lug'at (dictionary) figurali qavslar {} ichida yoziladi."},
+  { q: "SQL tili asosan nima uchun ishlatiladi?", a: "Ma'lumotlar bazasi bilan ishlash", o: ["Ma'lumotlar bazasi bilan ishlash", "Rasm chizish", "Video montaj", "Operatsion tizim yaratish"], s: "Informatika" , e: "SQL tili ma'lumotlar bazasi bilan ishlash uchun ishlatiladi."},
+  { q: "IPv4 manzili necha bitdan iborat?", a: "32 bit", o: ["32 bit", "16 bit", "64 bit", "128 bit"], s: "Informatika" , e: "IPv4 manzili 32 bitdan iborat."},
+  { q: "Algoritmning asosiy xossalaridan biri qaysi?", a: "Aniqlilik", o: ["Aniqlilik", "Tasodifiylik", "Cheksizlik", "Noaniqlik"], s: "Informatika" , e: "Aniqlilik - algoritmning asosiy xossalaridan biri (har bir qadam aniq bo'lishi kerak)."}
+],
+  11:[
+  { q: "Agar 2x - 7 = 15 bo'lsa, x ni toping.", a: "11", o: ["11", "10", "12", "9"], s: "Matematika" , e: "2x - 7 = 15 bo'lsa, 2x = 22, x = 11."},
+  { q: "sin²x + cos²x ayniyati nimaga teng?", a: "1", o: ["1", "0", "2", "sinx"], s: "Matematika" , e: "sin²x + cos²x = 1 - trigonometriyaning asosiy ayniyati."},
+  { q: "log₂(32) nechaga teng?", a: "5", o: ["5", "4", "6", "8"], s: "Matematika" , e: "log₂(32) = 5, chunki 2⁵ = 32."},
+  { q: "Hosilaning geometrik ma'nosi nima?", a: "Urinmaning og'ish burchagi tangensi", o: ["Urinmaning og'ish burchagi tangensi", "Yuza", "Hajm", "Kesmaning uzunligi"], s: "Matematika" , e: "Hosilaning geometrik ma'nosi - funksiya grafigiga o'tkazilgan urinmaning og'ish burchagi tangensi."},
+  { q: "Integralning asosiy vazifalaridan biri nima?", a: "Yuzani hisoblash", o: ["Yuzani hisoblash", "Ildiz topish", "Kasrni qisqartirish", "Logarifm topish"], s: "Matematika" , e: "Integralning asosiy vazifalaridan biri - egri chiziq ostidagi yuzani hisoblash."},
+
+  { q: "'Kecha va kunduz' romanining muallifi kim?", a: "Cho'lpon", o: ["Cho'lpon", "Abdulla Qodiriy", "Oybek", "Erkin Vohidov"], s: "Adabiyot" , e: "'Kecha va kunduz' romanini Cho'lpon yozgan."},
+  { q: "'Qutlug' qon' romanini kim yozgan?", a: "Oybek", o: ["Oybek", "Cho'lpon", "Abdulla Qahhor", "Hamid Olimjon"], s: "Adabiyot" , e: "'Qutlug' qon' romanini Oybek yozgan."},
+  { q: "Rasmiy uslub asosan qayerda qo'llaniladi?", a: "Hujjatlarda", o: ["Hujjatlarda", "She'rlarda", "Ertaklarda", "Romanlarda"], s: "Ona Tili" , e: "Rasmiy uslub asosan hujjatlarda qo'llaniladi."},
+  { q: "Maqolaning asosiy maqsadi nima?", a: "Muammoni yoritish va fikr bildirish", o: ["Muammoni yoritish va fikr bildirish", "Faqat hikoya qilish", "She'r yozish", "Hazillashish"], s: "Ona Tili" , e: "Maqola muammoni yoritish va o'z fikrini bildirish maqsadida yoziladi."},
+  { q: "Sinonim so'zlar deb nimaga aytiladi?", a: "Ma'nodosh so'zlarga", o: ["Ma'nodosh so'zlarga", "Qarama-qarshi ma'noli so'zlarga", "Shakldosh so'zlarga", "Eskirgan so'zlarga"], s: "Ona Tili" , e: "Sinonim so'zlar - ma'nodosh so'zlar deb ataladi."},
+
+  { q: "O'zbekiston Respublikasi Konstitutsiyasi qachon qabul qilingan?", a: "1992-yil 8-dekabr", o: ["1992-yil 8-dekabr", "1991-yil 1-sentyabr", "1993-yil 9-may", "1995-yil 31-avgust"], s: "Tarix" , e: "O'zbekiston Respublikasi Konstitutsiyasi 1992-yil 8-dekabrda qabul qilingan."},
+  { q: "Sovuq urush asosan qaysi ikki davlat o'rtasida kechgan?", a: "AQSh va SSSR", o: ["AQSh va SSSR", "AQSh va Xitoy", "Fransiya va Germaniya", "Rossiya va Yaponiya"], s: "Tarix" , e: "Sovuq urush asosan AQSh va SSSR o'rtasida kechgan."},
+  { q: "BMTning bosh kotibi qanday yo'l bilan saylanadi?", a: "BMT Bosh Assambleyasi tomonidan", o: ["BMT Bosh Assambleyasi tomonidan", "Saylov orqali", "Prezident tomonidan", "Referendum orqali"], s: "Huquq" , e: "BMTning bosh kotibi BMT Bosh Assambleyasi tomonidan saylanadi."},
+{ q: "Yer atmosferasining eng quyi qatlami qaysi?", a: "Troposfera", o: ["Troposfera", "Stratosfera", "Mezosfera", "Termosfera"], s: "Geografiya" , e: "Troposfera - Yer atmosferasining eng quyi qatlami."},
+  { q: "Dunyoning eng baland cho'qqisi qaysi?", a: "Everest", o: ["Everest", "Elbrus", "K2", "Kilimanjaro"], s: "Geografiya" , e: "Everest - dunyodagi eng baland cho'qqi."},
+
+  { q: "Elektr tokining quvvati qaysi formula bilan topiladi?", a: "P = U × I", o: ["P = U × I", "F = ma", "v = s/t", "Q = cmΔt"], s: "Fizika" , e: "Elektr tokining quvvati P = U × I formulasi bilan topiladi."},
+  { q: "E = mc² formulasini kim yaratgan?", a: "Albert Eynshteyn", o: ["Albert Eynshteyn", "Isaak Nyuton", "Galiley", "Nikola Tesla"], s: "Fizika" , e: "E = mc² formulasini Albert Eynshteyn yaratgan."},
+  { q: "Natriyning kimyoviy belgisi qaysi?", a: "Na", o: ["Na", "N", "Ne", "K"], s: "Kimyo" , e: "Natriyning kimyoviy belgisi - Na (lotincha 'natrium')."},
+  { q: "pH = 7 bo'lgan eritma qanday muhit hisoblanadi?", a: "Neytral", o: ["Neytral", "Kislotali", "Ishqoriy", "Zaharli"], s: "Kimyo" , e: "pH = 7 bo'lgan eritma neytral muhit hisoblanadi."},
+  { q: "RNKning to'liq nomi nima?", a: "Ribonuklein kislota", o: ["Ribonuklein kislota", "Dezoksiribonuklein kislota", "Aminokislota", "Nukleotid"], s: "Biologiya" , e: "RNK - ribonuklein kislotaning to'liq nomi."},
+
+  { q: "Past Perfect zamonining formulasi qaysi?", a: "Had + V3", o: ["Had + V3", "Have + V3", "Will + V1", "Was + V-ing"], s: "Ingliz Tili" , e: "Past Perfect zamoni 'had + V3' formulasi bilan yasaladi."},
+  { q: "'Despite' so'zining ma'nosi nima?", a: "Qaramay", o: ["Qaramay", "Chunki", "Shuning uchun", "Ammo"], s: "Ingliz Tili" , e: "Ingliz tilida 'Despite' - qaramay degani."},
+  { q: "Future Perfect zamonining formulasi qaysi?", a: "Will have + V3", o: ["Will have + V3", "Will + V1", "Have + V3", "Had + V3"], s: "Ingliz Tili" , e: "Future Perfect zamoni 'will have + V3' formulasi bilan yasaladi."},
+  { q: "Passive Voice'da 'take' fe'lining V3 shakli qaysi?", a: "Taken", o: ["Taken", "Took", "Taking", "Take"], s: "Ingliz Tili" , e: "'Take' fe'lining uchinchi shakli (V3) - 'taken'."},
+  { q: "'If I had known, I ... you.' gapini to'ldiring.", a: "would have helped", o: ["would have helped", "will help", "helped", "have helped"], s: "Ingliz Tili" , e: "O'tgan shartga qarshi natija uchun 'would have helped' shakli ishlatiladi (Third Conditional)."},
+
+  { q: "Python'da klass yaratish uchun qaysi kalit so'z ishlatiladi?", a: "class", o: ["class", "object", "new", "struct"], s: "Informatika" , e: "Python'da klass yaratish uchun 'class' kalit so'zi ishlatiladi."},
+  { q: "Sun'iy intellektning inglizcha qisqartmasi qaysi?", a: "AI", o: ["AI", "ML", "CPU", "GPU"], s: "Informatika" , e: "AI - 'Artificial Intelligence' (sun'iy intellekt) so'zining qisqartmasi."},
+  { q: "HTTPS protokolining asosiy afzalligi nima?", a: "Ma'lumotlarni shifrlashi", o: ["Ma'lumotlarni shifrlashi", "Internetni tezlashtirishi", "Xotirani oshirishi", "Fayllarni siqishi"], s: "Informatika" , e: "HTTPS protokoli ma'lumotlarni shifrlash orqali xavfsizlikni ta'minlaydi."},
+  { q: "SQL'da ma'lumotlarni olish uchun qaysi buyruq ishlatiladi?", a: "SELECT", o: ["SELECT", "DELETE", "UPDATE", "INSERT"], s: "Informatika" , e: "SQL'da ma'lumot olish uchun 'SELECT' buyrug'i ishlatiladi."},
+  { q: "Git dasturining asosiy vazifasi nima?", a: "Versiyalarni boshqarish", o: ["Versiyalarni boshqarish", "Rasm tahrirlash", "Video montaj", "Kompyuterni formatlash"], s: "Informatika" , e: "Git dasturi loyihadagi versiyalarni boshqarish uchun ishlatiladi."}
+]
+};
+
+// Umumiy zaxira generator (agar sinfda savollar kam qolsa)
+function getBackupQuestion() {
+  return { q: "O'zbek tili qachon davlat tili maqomini olgan?", a: "1989-yil 21-oktyabr", o: ["1989-yil 21-oktyabr", "1991-yil", "1992-yil", "1985-yil"], s: "Ona Tili", e: "O'zbek tiliga davlat tili maqomi 1989-yil 21-oktyabrda qonun bilan berilgan." };
+}
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  if (masterVolume <= 0) return; // Ovoz o'chirilgan
+
+  if (type === 'correct') {
+    osc.type = 'sine'; osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.1 * masterVolume, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01 * masterVolume, audioCtx.currentTime + 0.3);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+  } else if (type === 'wrong') {
+    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+    osc.frequency.linearRampToValueAtTime(110, audioCtx.currentTime + 0.2);
+    gain.gain.setValueAtTime(0.15 * masterVolume, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01 * masterVolume, audioCtx.currentTime + 0.25);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+} else if (type === 'tick') {
+    osc.type = 'triangle'; osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.05 * masterVolume, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01 * masterVolume, audioCtx.currentTime + 0.05);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.06);
+  }
+}
+
+const gradeGrid = document.getElementById('gradeGrid');
+for(let g=1; g<=11; g++){
+  const chip = document.createElement('div');
+  chip.className = 'grade-chip';
+  chip.textContent = g + '-sinf';
+  chip.dataset.grade = g;
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.grade-chip[data-grade]').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    grade = g;
+    if (gameMode === 'solo') {
+      selectedSubject = null;
+      document.getElementById('subjectSection').style.display = 'none';
+    } else {
+      buildSubjectGrid(g);
+    }
+  });
+  gradeGrid.appendChild(chip);
+}
+
+function buildSubjectGrid(g) {
+  const section = document.getElementById('subjectSection');
+  const grid = document.getElementById('subjectGrid');
+  grid.innerHTML = '';
+  selectedSubject = null;
+
+  const allChip = document.createElement('div');
+  allChip.className = 'grade-chip active';
+  allChip.textContent = 'Barcha fanlar';
+  allChip.addEventListener('click', ()=>{
+    grid.querySelectorAll('.grade-chip').forEach(c=>c.classList.remove('active'));
+    allChip.classList.add('active');
+    selectedSubject = null;
+  });
+  grid.appendChild(allChip);
+
+  const subjects = [...new Set((database[g] || []).map(q => q.s))];
+  subjects.forEach(subj => {
+    const chip = document.createElement('div');
+    chip.className = 'grade-chip';
+    chip.textContent = subj;
+    chip.addEventListener('click', ()=>{
+      grid.querySelectorAll('.grade-chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      selectedSubject = subj;
+    });
+    grid.appendChild(chip);
+  });
+
+  section.style.display = subjects.length ? 'block' : 'none';
+}
+
+document.getElementById('volumeSlider').addEventListener('input', (e) => {
+  const val = parseInt(e.target.value, 10);
+  masterVolume = val / 100;
+  document.getElementById('volVal').textContent = val + '%';
+  document.getElementById('volIcon').textContent = val === 0 ? '🔇' : (val < 50 ? '🔉' : '🔊');
+  saveSettings({ volume: masterVolume });
+});
+
+// ---- PWA: xizmat ko'rsatuvchi skript (offline o'ynash) ----
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {
+      // Fayl file:// orqali ochilgan yoki server qo'llamasa, jimgina o'tkazib yuboramiz
+    });
+  });
+}
+
+// ---- PWA: ekranga o'rnatish tugmasi ----
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  document.getElementById('installHint').style.display = 'block';
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  document.getElementById('installHint').style.display = 'none';
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installHint').style.display = 'none';
+});
+
+// ---- Natijani ulashish (Telegram / Instagram va boshqalar) ----
+document.getElementById('shareBtn').addEventListener('click', async () => {
+  const p1Acc = p1.total > 0 ? Math.round((p1.correct / p1.total) * 100) : 0;
+  const p2Acc = p2.total > 0 ? Math.round((p2.correct / p2.total) * 100) : 0;
+  let resultLine;
+  if (p1.score === p2.score) {
+    resultLine = "Durrang tugadi!";
+  } else if (p1.score > p2.score) {
+    resultLine = `${p1.name} g'alaba qozondi!`;
+  } else {
+    resultLine = `${p2.name} g'alaba qozondi!`;
+  }
+  const shareText =
+    `🎓 Bilim Dueli natijalari\n\n` +
+    `${resultLine}\n\n` +
+    `${p1.name}: ${p1.score} ball (${p1.correct}/${p1.total}, ${p1Acc}%)\n` +
+    `${p2.name}: ${p2.score} ball (${p2.correct}/${p2.total}, ${p2Acc}%)\n\n` +
+    `Sen ham sinash uchun o'yna! 🔥`;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: 'Bilim Dueli natijasi', text: shareText });
+      return;
+    } catch (e) {
+      // Foydalanuvchi bekor qilgan bo'lishi mumkin, quyidagi fallbackka o'tamiz
+    }
+  }
+
+  // Fallback: Telegramda ulashish oynasini ochamiz
+  const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(shareText)}`;
+  window.open(tgUrl, '_blank');
+
+  // Instagram matnni to'g'ridan-to'g'ri qabul qilmaydi, shuning uchun clipboardga nusxalab qo'yamiz
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(shareText);
+    } catch (e) { /* clipboard ruxsati yo'q bo'lishi mumkin */ }
+  }
+});
+
+function setMode(mode) {
+  gameMode = mode;
+  document.getElementById('modePVP').classList.toggle('active', mode === 'pvp');
+  document.getElementById('modeBot').classList.toggle('active', mode === 'bot');
+  document.getElementById('modeSolo').classList.toggle('active', mode === 'solo');
+  const p2Input = document.getElementById('p2name');
+  const p2Field = document.querySelector('.player-field.p2');
+  const vsBadge = document.querySelector('.vs-badge');
+  const soloHint = document.getElementById('soloHint');
+
+  document.getElementById('botDiffBox').style.display = (mode === 'bot') ? 'block' : 'none';
+  soloHint.style.display = (mode === 'solo') ? 'block' : 'none';
+
+  if(mode === 'bot') {
+    p2Input.value = 'Aqlli Robot'; p2Input.disabled = true;
+  } else if(mode === 'pvp') {
+    p2Input.value = 'Alisher'; p2Input.disabled = false;
+  }
+
+  if(mode === 'solo') {
+    p2Field.style.display = 'none';
+    vsBadge.style.display = 'none';
+    document.getElementById('subjectSection').style.display = 'none';
+  } else {
+    p2Field.style.display = '';
+    vsBadge.style.display = '';
+    if (grade) buildSubjectGrid(grade);
+  }
+}
+
+function setTimeLimit(speed) {
+  // Barcha tugmalardan faol (active) klassini olib tashlaymiz
+  document.getElementById('timeSlow').classList.remove('active');
+  document.getElementById('timeMedium').classList.remove('active');
+  document.getElementById('timeFast').classList.remove('active');
+
+  // Tanlangan rejimga ko'ra vaqtni belgilaymiz va tugmani faollashtiramiz
+  if (speed === 'slow') {
+    TIME_LIMIT = 25;
+    document.getElementById('timeSlow').classList.add('active');
+  } else if (speed === 'medium') {
+    TIME_LIMIT = 17;
+    document.getElementById('timeMedium').classList.add('active');
+  } else if (speed === 'fast') {
+    TIME_LIMIT = 10;
+    document.getElementById('timeFast').classList.add('active');
+  }
+}
+
+function setDiff(diff) {
+  botDifficulty = diff;
+  document.getElementById('diffEasy').classList.toggle('active', diff === 'easy');
+  document.getElementById('diffMedium').classList.toggle('active', diff === 'medium');
+  document.getElementById('diffHard').classList.toggle('active', diff === 'hard');
+}
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function buildGamePool() {
+  const gradeQuestions = database[grade] || [];
+  if (gameMode === 'solo') {
+    // Har bir fandan 5 tadan savol tanlaymiz
+    const subjects = [...new Set(gradeQuestions.map(q => q.s))];
+    let soloPool = [];
+    subjects.forEach(subj => {
+      const subjQs = shuffle(gradeQuestions.filter(q => q.s === subj).map(q => ({...q})));
+      soloPool = soloPool.concat(subjQs.slice(0, 5));
+    });
+    return shuffle(soloPool);
+  }
+  let basePool = JSON.parse(JSON.stringify(gradeQuestions));
+  if (selectedSubject) basePool = basePool.filter(q => q.s === selectedSubject);
+  return basePool;
+}
+
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  audioCtx.resume();
+  const n1 = document.getElementById('p1name').value.trim() || '1-o\'yinchi';
+  const n2 = document.getElementById('p2name').value.trim() || '2-o\'yinchi';
+  const hint = document.getElementById('hint');
+  if(!grade){
+    hint.textContent = "Iltimos, avval maktab sinfini tanlang.";
+    hint.style.color = 'var(--warn)';
+    return;
+  }
+  const settingsToSave = { p1name: n1 };
+  if (gameMode === 'pvp') settingsToSave.p2name = n2;
+  saveSettings(settingsToSave);
+  
+  // Tanlangan sinfga (va agar tanlangan bo'lsa, fanga yoki yakka mashq rejimiga) tegishli savollarni tayyorlash
+  let basePool = buildGamePool();
+  if (gameMode === 'solo' && basePool.length === 0) {
+    hint.textContent = "Bu sinf uchun savollar topilmadi.";
+    hint.style.color = 'var(--warn)';
+    return;
+  }
+  poolForRefill = basePool;
+  currentPool = shuffle(JSON.parse(JSON.stringify(basePool)));
+  mistakes = [];
+  subjectStats = {};
+
+  p1 = { name:n1, score:0, correct:0, total:0, combo:0, maxCombo:0 };
+  p2 = { name:n2, score:0, correct:0, total:0, combo:0, maxCombo:0 };
+  round = 0; isExtraRoundMode = false;
+  TOTAL_ROUNDS = gameMode === 'solo' ? Math.max(1, basePool.length) : 10;
+  
+  document.getElementById('nm1').textContent = n1;
+  document.getElementById('nm2').textContent = n2;
+  document.getElementById('av1').textContent = n1[0].toUpperCase();
+  document.getElementById('av2').textContent = n2[0].toUpperCase();
+  document.getElementById('plate2').style.display = gameMode === 'solo' ? 'none' : 'flex';
+  document.getElementById('turnLabel').style.display = gameMode === 'solo' ? 'none' : 'block';
+  document.getElementById('vsLabel').style.display = gameMode === 'solo' ? 'none' : 'inline';
+  
+  buildTrack();
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('game').style.display = 'block';
+  currentPlayer = 1;
+  nextQuestion();
+});
+
+function buildTrack(){
+  const track = document.getElementById('track');
+  track.innerHTML = '';
+  for(let i=0; i<TOTAL_ROUNDS; i++){
+    const n = document.createElement('div');
+    n.className = 'node';
+    track.appendChild(n);
+  }
+}
+function nextQuestion(){
+  clearInterval(timer);
+  
+  if(round >= TOTAL_ROUNDS){
+    if(gameMode !== 'solo' && p1.score === p2.score) {
+      isExtraRoundMode = true; TOTAL_ROUNDS += 2;
+      const track = document.getElementById('track');
+      for(let i=0; i<2; i++){
+        const n = document.createElement('div');
+        n.className = 'node'; track.appendChild(n);
+      }
+    } else {
+      finishGame(); return;
+    }
+  }
+  
+  // Savol tanlash mantiqi (Chalkashlikning oldini olish)
+  let rawQ = currentPool.pop();
+  if(!rawQ) {
+    if (poolForRefill.length > 0) {
+      currentPool = shuffle(JSON.parse(JSON.stringify(poolForRefill)));
+      rawQ = currentPool.pop();
+    } else {
+      rawQ = getBackupQuestion();
+    }
+  }
+  
+  currentAnswer = rawQ.a;
+  currentExplanation = rawQ.e || '';
+  currentQuestionText = rawQ.q;
+  currentSubjectName = rawQ.s;
+  document.getElementById('qText').textContent = rawQ.q;
+  document.getElementById('subjectTag').textContent = rawQ.s;
+  document.getElementById('explainBox').style.display = 'none';
+  
+  if(isExtraRoundMode) {
+    document.getElementById('roundLbl').textContent = "Qo'shimcha Raund!";
+    document.getElementById('roundLbl').style.color = 'var(--warn)';
+  } else {
+    document.getElementById('roundLbl').textContent = (round+1) + ' / ' + TOTAL_ROUNDS;
+    document.getElementById('roundLbl').style.color = 'var(--chalk-dim)';
+  }
+
+  const box = document.getElementById('optionsBox');
+  box.innerHTML = '';
+  
+  let shuffOpts = shuffle([...rawQ.o]);
+  shuffOpts.forEach(opt=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt'; btn.textContent = opt;
+    btn.addEventListener('click', ()=>selectAnswer(btn, opt));
+    box.appendChild(btn);
+  });
+
+  document.getElementById('turnLabel').className = 'turn-label p' + currentPlayer;
+  document.getElementById('turnName').textContent = currentPlayer===1 ? p1.name : p2.name;
+  document.getElementById('plate1').classList.toggle('active', currentPlayer===1);
+  document.getElementById('plate2').classList.toggle('active', currentPlayer===2);
+
+  updateComboUI(); startTimer();
+
+  if(gameMode === 'bot' && currentPlayer === 2) { makeBotDecision(); }
+}
+
+function startTimer(){
+  timeLeft = TIME_LIMIT;
+  const fill = document.getElementById('timerFill');
+  fill.style.transition = 'none'; fill.style.width = '100%';
+  fill.style.background = 'var(--p2)';
+  requestAnimationFrame(()=>{ fill.style.transition = 'width 1s linear, background .3s'; });
+  timer = setInterval(()=>{
+    timeLeft--;
+    const pct = Math.max(0,(timeLeft/TIME_LIMIT)*100);
+    fill.style.width = pct + '%';
+    if(timeLeft <= 5) { fill.style.background = 'var(--warn)'; playSound('tick'); }
+    if(timeLeft <= 0){ clearInterval(timer); lockOptions(null); settleRound(false); }
+  },1000);
+}
+
+function updateComboUI() {
+  const cb1 = document.getElementById('cb1'); const cb2 = document.getElementById('cb2');
+  if(p1.combo > 1) { cb1.textContent = `Combo x${p1.combo} 🔥`; cb1.style.display='inline-block'; } else { cb1.style.display='none'; }
+  if(p2.combo > 1) { cb2.textContent = `Combo x${p2.combo} 🔥`; cb2.style.display='inline-block'; } else { cb2.style.display='none'; }
+}
+
+function makeBotDecision() {
+  const opts = document.querySelectorAll('.opt');
+  let chance = 0.60;
+  if(botDifficulty === 'medium') chance = 0.70;
+  if(botDifficulty === 'hard') chance = 0.92;
+  const isCorrect = Math.random() < chance;
+  let targetBtn = null;
+
+  setTimeout(() => {
+    opts.forEach(btn => { if(isCorrect && btn.textContent === currentAnswer) targetBtn = btn; });
+    if(!targetBtn) {
+      let wrongBtns = Array.from(opts).filter(b => b.textContent !== currentAnswer);
+      targetBtn = wrongBtns[Math.floor(Math.random()*wrongBtns.length)];
+    }
+    if(targetBtn) targetBtn.click();
+  }, Math.floor(Math.random()*1400)+1500);
+}
+
+function selectAnswer(btn, val){ clearInterval(timer); const correct = String(val) === String(currentAnswer); lockOptions(btn); settleRound(correct); }
+
+function lockOptions(chosenBtn){
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(o=>{
+    o.disabled = true;
+    if(String(o.textContent) === String(currentAnswer)){ o.classList.add('correct'); } else if(o === chosenBtn){ o.classList.add('wrong'); }
+  });
+}
+function settleRound(correct){
+  const track = document.querySelectorAll('.node');
+  const node = track[round];
+  let activePlayer = currentPlayer === 1 ? p1 : p2;
+  activePlayer.total++;
+
+  if(!subjectStats[currentSubjectName]) subjectStats[currentSubjectName] = { correct:0, total:0 };
+  subjectStats[currentSubjectName].total++;
+  if(correct) subjectStats[currentSubjectName].correct++;
+  
+  if(correct){
+    playSound('correct'); activePlayer.correct++; activePlayer.combo++;
+    if(activePlayer.combo > activePlayer.maxCombo) activePlayer.maxCombo = activePlayer.combo;
+    let bonus = activePlayer.combo > 1 ? (activePlayer.combo - 1) * 2 : 0;
+    activePlayer.score += 10 + bonus;
+    if(node) node.classList.add('p' + currentPlayer);
+  } else {
+    playSound('wrong'); activePlayer.combo = 0;
+    if(node) node.classList.add('miss');
+    mistakes.push({
+      player: activePlayer.name,
+      q: currentQuestionText,
+      a: currentAnswer,
+      e: currentExplanation
+    });
+  }
+
+  const explainBox = document.getElementById('explainBox');
+  if(!correct && currentExplanation) {
+    explainBox.innerHTML = `<b>To'g'ri javob: ${currentAnswer}.</b><br>Chunki ${currentExplanation}`;
+    explainBox.style.display = 'block';
+  } else {
+    explainBox.style.display = 'none';
+  }
+  
+  document.getElementById('sc1').textContent = p1.score;
+  document.getElementById('sc2').textContent = p2.score;
+  round++;
+  if(gameMode !== 'solo') { currentPlayer = currentPlayer===1 ? 2 : 1; }
+  setTimeout(nextQuestion, correct ? 1200 : 3200);
+}
+
+const ACHIEVEMENTS = [
+  { id:'first_win', icon:'🥇', title:"Birinchi g'alaba", check: s => s.wins >= 1 },
+  { id:'wins_5', icon:'🏆', title:"5 ta g'alaba", check: s => s.wins >= 5 },
+  { id:'wins_10', icon:'👑', title:"10 ta g'alaba", check: s => s.wins >= 10 },
+  { id:'combo_5', icon:'🔥', title:'5x Combo', check: s => s.bestCombo >= 5 },
+  { id:'combo_10', icon:'⚡', title:'10x Combo', check: s => s.bestCombo >= 10 },
+  { id:'score_100', icon:'💯', title:'100+ ball', check: s => s.bestScore >= 100 },
+  { id:'perfect', icon:'🎯', title:"Xatosiz o'yin", check: s => s.perfectGames >= 1 }
+];
+
+function loadLeaderboard(){
+  try { return JSON.parse(localStorage.getItem('bilimDueliLeaderboard') || '{}'); }
+  catch(e){ return {}; }
+}
+function saveLeaderboard(data){
+  try { localStorage.setItem('bilimDueliLeaderboard', JSON.stringify(data)); } catch(e){}
+}
+
+function updatePlayerStats(rawName, player, won){
+  const data = loadLeaderboard();
+  const key = (rawName || "O'yinchi").trim() || "O'yinchi";
+  const s = data[key] || { games:0, wins:0, bestScore:0, bestCombo:0, perfectGames:0, achievements:[] };
+  s.games++;
+  if(won) s.wins++;
+  if(player.score > s.bestScore) s.bestScore = player.score;
+  if(player.maxCombo > s.bestCombo) s.bestCombo = player.maxCombo;
+  if(player.total > 0 && player.correct === player.total) s.perfectGames = (s.perfectGames||0) + 1;
+
+  const newlyUnlocked = [];
+  ACHIEVEMENTS.forEach(a=>{
+    if(!s.achievements.includes(a.id) && a.check(s)){
+      s.achievements.push(a.id);
+      newlyUnlocked.push(a);
+    }
+  });
+
+  data[key] = s;
+  saveLeaderboard(data);
+  return { name:key, stats:s, newlyUnlocked };
+}
+
+function renderAchievements(ownerName, stats){
+  document.getElementById('achvOwnerName').textContent = ownerName;
+  document.getElementById('achvBadges').innerHTML = ACHIEVEMENTS.map(a => `
+    <div class="achv-badge ${stats.achievements.includes(a.id) ? 'unlocked' : ''}">
+      <span class="achv-icon">${a.icon}</span>${a.title}
+    </div>
+  `).join('');
+}
+
+function renderNewAchvToast(results){
+  const unlocked = [];
+  results.forEach(r => { r.newlyUnlocked.forEach(a => unlocked.push(`${escapeHtml(r.name)}: ${a.icon} ${a.title}`)); });
+  const box = document.getElementById('newAchvToast');
+  if(unlocked.length){
+    box.innerHTML = `<div class="new-achv-toast">🎉 Yangi yutuq!<br>${unlocked.join('<br>')}</div>`;
+  } else {
+    box.innerHTML = '';
+  }
+}
+
+function openLeaderboard(){
+  const data = loadLeaderboard();
+  const list = Object.entries(data)
+    .map(([name, s]) => ({ name, ...s }))
+    .sort((a, b) => b.bestScore - a.bestScore)
+    .slice(0, 10);
+  const container = document.getElementById('leaderboardList');
+  if(list.length === 0){
+    container.innerHTML = '<p class="lb-empty">Hali hech kim o\'ynamagan. Birinchi bo\'ling!</p>';
+  } else {
+    container.innerHTML = list.map((p, i) => `
+      <div class="lb-row">
+        <div class="lb-rank">${i + 1}</div>
+        <div class="lb-info">
+          <div class="lb-name">${escapeHtml(p.name)}</div>
+          <div class="lb-meta">${p.wins} g'alaba · ${p.games} o'yin · Combo ${p.bestCombo}</div>
+        </div>
+        <div class="lb-score">${p.bestScore}</div>
+      </div>
+    `).join('');
+  }
+  document.getElementById('leaderboardOverlay').classList.add('open');
+}
+
+function finishGame(){
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('result').style.display = 'block';
+  const p1Acc = p1.total > 0 ? Math.round((p1.correct / p1.total) * 100) : 0;
+  const p2Acc = p2.total > 0 ? Math.round((p2.correct / p2.total) * 100) : 0;
+  const title = document.getElementById('resultTitle');
+  if(gameMode === 'solo') {
+    title.innerHTML = `Mashq yakunlandi! 📚 <span style="color:var(--gold);">${p1Acc}%</span> to'g'ri`;
+  } else if(p1.score === p2.score){ title.innerHTML = "Durrang!"; } 
+  else if(p1.score > p2.score){ title.innerHTML = `<span style="color:var(--p1);">${p1.name}</span> g'alaba qozondi! 🎉`; } 
+  else { title.innerHTML = `<span style="color:var(--p2);">${p2.name}</span> g'alaba qozondi! 🤖`; }
+
+  if(gameMode === 'solo') {
+    document.getElementById('statsBody').innerHTML = `
+      <tr><td style="color:var(--p1); font-weight:bold;">${p1.name}</td><td>${p1.score}</td><td>${p1.correct} / ${p1.total} (${p1Acc}%)</td><td>${p1.maxCombo}</td></tr>
+    `;
+  } else {
+    document.getElementById('statsBody').innerHTML = `
+      <tr><td style="color:var(--p1); font-weight:bold;">${p1.name}</td><td>${p1.score}</td><td>${p1.correct} / ${p1.total} (${p1Acc}%)</td><td>${p1.maxCombo}</td></tr>
+      <tr><td style="color:var(--p2); font-weight:bold;">${p2.name}</td><td>${p2.score}</td><td>${p2.correct} / ${p2.total} (${p2Acc}%)</td><td>${p2.maxCombo}</td></tr>
+    `;
+  }
+
+  const weakSection = document.getElementById('weakSection');
+  if(gameMode === 'solo') {
+    renderWeakAreas();
+    weakSection.style.display = 'block';
+  } else {
+    weakSection.style.display = 'none';
+  }
+
+  const mistakesSection = document.getElementById('mistakesSection');
+  const mistakesList = document.getElementById('mistakesList');
+  if (mistakes.length > 0) {
+    mistakesList.innerHTML = mistakes.map(m => `
+      <div class="mistake-item">
+        <div class="m-who">${escapeHtml(m.player)} xato javob berdi</div>
+        <div class="m-q">${escapeHtml(m.q)}</div>
+        <div class="m-a">To'g'ri javob: ${escapeHtml(m.a)}</div>
+        ${m.e ? `<div class="m-e">Chunki ${escapeHtml(m.e)}</div>` : ''}
+      </div>
+    `).join('');
+    mistakesSection.style.display = 'block';
+  } else {
+    mistakesList.innerHTML = '';
+    mistakesSection.style.display = 'none';
+  }
+
+  const p1Won = gameMode !== 'solo' && p1.score > p2.score;
+  const p2Won = p2.score > p1.score;
+  const results = [updatePlayerStats(p1.name, p1, p1Won)];
+  if (gameMode === 'pvp') { results.push(updatePlayerStats(p2.name, p2, p2Won)); }
+  renderNewAchvToast(results);
+  renderAchievements(results[0].name, results[0].stats);
+}
+
+function renderWeakAreas() {
+  const entries = Object.entries(subjectStats).map(([subject, s]) => ({
+    subject,
+    correct: s.correct,
+    total: s.total,
+    pct: s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0
+  }));
+  entries.sort((a, b) => a.pct - b.pct);
+
+  const worstPct = entries.length ? entries[0].pct : null;
+  const bestPct = entries.length ? entries[entries.length - 1].pct : null;
+
+  const list = document.getElementById('weakList');
+  if (entries.length === 0) {
+    list.innerHTML = '<p class="lb-empty">Ma\'lumot yo\'q.</p>';
+    return;
+  }
+
+  list.innerHTML = entries.map(e => {
+    let barColor = 'var(--p2)';
+    if (e.pct < 50) barColor = 'var(--warn)';
+    else if (e.pct < 75) barColor = 'var(--gold)';
+
+    let badge = '';
+    if (e.pct === worstPct && worstPct < 100) badge = '<span class="weak-badge">Eng zaif</span>';
+    else if (e.pct === bestPct && bestPct === 100 && entries.length > 1) badge = '<span class="weak-badge" style="background:var(--p2-dim); color:var(--p2);">Eng kuchli</span>';
+
+    const cardClass = (e.pct === worstPct && worstPct < 100) ? 'worst' : (e.pct === bestPct && bestPct === 100) ? 'best' : '';
+
+    return `
+      <div class="weak-item ${cardClass}">
+        <div class="w-top">
+          <span class="w-name">${escapeHtml(e.subject)} ${badge}</span>
+          <span class="w-pct" style="color:${barColor};">${e.pct}%</span>
+        </div>
+        <div class="weak-bar"><div class="weak-bar-fill" style="width:${e.pct}%; background:${barColor};"></div></div>
+        <div class="w-sub">${e.correct} / ${e.total} to'g'ri javob</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+document.getElementById('replayBtn').addEventListener('click', ()=>{
+  let basePool = buildGamePool();
+  poolForRefill = basePool;
+  currentPool = shuffle(JSON.parse(JSON.stringify(basePool)));
+  mistakes = [];
+  subjectStats = {};
+  p1 = { name:p1.name, score:0, correct:0, total:0, combo:0, maxCombo:0 };
+  p2 = { name:p2.name, score:0, correct:0, total:0, combo:0, maxCombo:0 };
+  round = 0; currentPlayer = 1; isExtraRoundMode = false;
+  TOTAL_ROUNDS = gameMode === 'solo' ? Math.max(1, basePool.length) : 10;
+  document.getElementById('sc1').textContent = 0; document.getElementById('sc2').textContent = 0;
+  document.getElementById('plate2').style.display = gameMode === 'solo' ? 'none' : 'flex';
+  document.getElementById('turnLabel').style.display = gameMode === 'solo' ? 'none' : 'block';
+  document.getElementById('vsLabel').style.display = gameMode === 'solo' ? 'none' : 'inline';
+  buildTrack(); document.getElementById('result').style.display = 'none'; document.getElementById('game').style.display = 'block';
+  nextQuestion();
+});
+
+document.getElementById('changeGradeBtn').addEventListener('click', ()=>{ document.getElementById('result').style.display = 'none'; document.getElementById('setup').style.display = 'block'; });
+
+document.getElementById('leaderboardBtn').addEventListener('click', openLeaderboard);
+document.getElementById('closeLeaderboard').addEventListener('click', ()=> document.getElementById('leaderboardOverlay').classList.remove('open'));
+document.getElementById('leaderboardOverlay').addEventListener('click', (e)=>{ if(e.target.id === 'leaderboardOverlay') e.currentTarget.classList.remove('open'); });
+</script>
+</body>
+</html>
